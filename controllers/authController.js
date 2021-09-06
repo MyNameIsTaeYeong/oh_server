@@ -1,4 +1,8 @@
 import request from "request-promise";
+import global from "../global.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const kakaoLogin = async (req, res) => {
   try {
@@ -18,12 +22,15 @@ export const kakaoLogin = async (req, res) => {
       json: true,
     });
 
+    global.token = getToken.access_token;
+
     const response = await request({
       uri: "https://kapi.kakao.com/v2/user/me",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Bearer ${getToken.access_token}`,
       },
+      json: true,
     });
 
     // email동의 구하지 않은 경우
@@ -32,10 +39,14 @@ export const kakaoLogin = async (req, res) => {
 
     // email이 유효하지 않은 경우
 
-    console.log(response);
+    const {
+      kakao_account: { email },
+    } = response;
+    console.log(email);
+    res.send({ email, name: "탱탱" });
   } catch (error) {
     console.log(error);
+  } finally {
+    res.end();
   }
-
-  res.send("jajaja");
 };
