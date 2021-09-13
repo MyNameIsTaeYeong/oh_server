@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import "./global.js";
+import "./db.js";
 
 dotenv.config();
 
