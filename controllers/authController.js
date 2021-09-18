@@ -45,7 +45,7 @@ export const kakaoLogin = async (req, res) => {
       kakao_account: { email },
     } = response;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("records");
     if (user) {
       res.send(user);
       console.log("haha");

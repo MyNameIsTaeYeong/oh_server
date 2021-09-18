@@ -8,7 +8,8 @@ import "./db.js";
 dotenv.config();
 
 const app = express();
-
+// json으로 이루어진 request body를 받기 위함.
+app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
