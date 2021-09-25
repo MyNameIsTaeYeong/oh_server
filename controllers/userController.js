@@ -9,6 +9,23 @@ export const logout = async (req, res) => {
   }
 };
 
+export const addRecord = async (req, res) => {
+  const { userId, recordName } = req.body;
+  try {
+    const user = await User.findById(userId).populate("records");
+    const record = await Record.create({
+      name: recordName,
+      dateAndValue: new Map(),
+    });
+
+    user.records.push(record);
+    user.save();
+    res.send(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const updateRecord = async (req, res) => {
   const { userId, currentDate, recordId, recordIndex, recordValue } = req.body;
   const value = parseInt(recordValue);
