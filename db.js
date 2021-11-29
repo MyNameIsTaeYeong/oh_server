@@ -1,15 +1,22 @@
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import mysql from "mysql2";
 dotenv.config();
 
-const uri = `mongodb+srv://client:${process.env.PASSWORD}@oh.7atzu.mongodb.net/oh?retryWrites=true&w=majority`;
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const init = async () => {
+  try {
+    const pool = await mysql.createPool({
+      host: process.env.HOST,
+      user: process.env.DATABASEUSER,
+      database: process.env.DATABASE,
+      password: process.env.PASSWORD,
+      connectionLimit: 10,
+    });
+    console.log("DB connect🧡🧡🧡🧡🧡🧡🧡");
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-  console.log("DB connect! 💚💚💚💚💚");
-});
+    return pool.promise();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default init();
