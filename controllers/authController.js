@@ -2,8 +2,24 @@ import request from "request-promise";
 import global from "../global.js";
 import dotenv from "dotenv";
 import pool from "../db.js";
+import User from "../models/User.js";
+import Record from "../models/Record.js";
 
 dotenv.config();
+
+const insertRecord = async (newUser, userId, recordName) => {
+  try {
+    const rtn = await pool.execute(
+      "INSERT INTO records(userId, recordName) VALUES(?,?)",
+      [userId, recordName]
+    );
+    const recordId = rtn[0].insertId;
+    newUser.records.push(new Record(recordId, userId, recordName, []));
+    return rtn;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const kakaoLogin = async (req, res) => {
   try {
@@ -44,50 +60,45 @@ export const kakaoLogin = async (req, res) => {
       kakao_account: { email },
     } = response;
 
-    const [rows] = await (
-      await pool
-    ).execute("SELECT id FROM users WHERE email=?", [email]);
+    const [rows] = await pool.execute("SELECT id FROM Users WHERE email=?", [
+      email,
+    ]);
 
-    let userId;
     if (rows[0] === undefined) {
-      const result = await (
-        await pool
-      ).execute("INSERT INTO users(email) VALUES(?)", [email]);
-      userId = result[0].insertId;
+      let result = await pool.execute("INSERT INTO Users(email) VALUES(?)", [
+        email,
+      ]);
+      const userId = result[0].insertId;
+
+      const newUser = new User(userId, email, []);
+
+      const promise1 = insertRecord(newUser, userId, "수면");
+      const promise2 = insertRecord(newUser, userId, "집중력");
+      const promise3 = insertRecord(newUser, userId, "기분");
+      await Promise.all([promise1, promise2, promise3]);
+      console.log(1);
+      console.log(newUser);
+      res.send(newUser);
     } else {
-      userId = rows[0].id;
+      const userId = rows[0].id;
+      const user = new User(userId, email, []);
+      const [recordRows] = await pool.execute(
+        "SELECT * FROM Records WHERE userId=?",
+        [userId]
+      );
+      user.records = recordRows.map((recordRow) => {
+        return new Record(
+          recordRow.id,
+          recordRow.userId,
+          recordRow.recordName,
+          []
+        );
+      });
+      console.log(2);
+      console.log(user);
+      res.send(user);
     }
 
-    console.log(userId);
-
-    // const user = await User.findOne({ email }).populate("records");
-    // if (user) {
-    //   res.send(user);
-    //   console.log("haha");
-    // } else {
-    //   console.log("hoho");
-    //   const record1 = await Record.create({
-    //     name: "수면",
-    //     dateAndValue: new Map(),
-    //   });
-
-    //   const record2 = await Record.create({
-    //     name: "집중력",
-    //     dateAndValue: new Map(),
-    //   });
-
-    //   const record3 = await Record.create({
-    //     name: "기분",
-    //     dateAndValue: new Map(),
-    //   });
-
-    //   const records = [];
-    //   records.push(record1);
-    //   records.push(record2);
-    //   records.push(record3);
-    //   const newUser = await User.create({ email, records });
-    //   res.send(newUser);
-    //}
     return res.end();
   } catch (error) {
     console.log(error);

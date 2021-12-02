@@ -1,16 +1,33 @@
-import mongoose from "mongoose";
-const { Schema } = mongoose;
+class User {
+  constructor(id, email, records) {
+    this.id = id;
+    this.email = email;
+    this.records = records;
+  }
 
-const UserSchema = new Schema({
-  email: String,
-  records: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Record",
-    },
-  ],
-});
+  set id(id) {
+    this._id = id;
+  }
 
-const Model = mongoose.model("User", UserSchema);
+  get id() {
+    return this._id;
+  }
 
-export default Model;
+  set email(email) {
+    this._email = email;
+  }
+
+  get email() {
+    return this._email;
+  }
+
+  set records(records) {
+    this._records = records;
+  }
+
+  get records() {
+    return this._records;
+  }
+}
+
+export default User;

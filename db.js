@@ -2,21 +2,22 @@ import dotenv from "dotenv";
 import mysql from "mysql2";
 dotenv.config();
 
-const init = async () => {
-  try {
-    const pool = await mysql.createPool({
-      host: process.env.HOST,
-      user: process.env.DATABASEUSER,
-      database: process.env.DATABASE,
-      password: process.env.PASSWORD,
-      connectionLimit: 10,
-    });
+const pool = mysql.createPool({
+  host: process.env.HOST,
+  user: process.env.DATABASEUSER,
+  database: process.env.DATABASE,
+  password: process.env.PASSWORD,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+pool.query("SELECT 1", (err, rows, fields) => {
+  if (err) {
+    console.log(err);
+  } else {
     console.log("DB connect🧡🧡🧡🧡🧡🧡🧡");
-
-    return pool.promise();
-  } catch (error) {
-    console.log(error);
   }
-};
+});
 
-export default init();
+export default pool.promise();
