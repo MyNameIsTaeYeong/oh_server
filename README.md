@@ -25,7 +25,7 @@ CREATE TABLE Records (
 CREATE TABLE Occurrences (
 	id INT AUTO_INCREMENT NOT NULL,
     recordValue INT NOT NULL,
-    recordDate TIMESTAMP NOT NULL,
+    recordDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     recordId INT NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(recordId)
