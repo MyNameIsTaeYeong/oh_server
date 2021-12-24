@@ -4,7 +4,7 @@ import authRouter from "./routers/authRouter.js";
 import userRouter from "./routers/userRouter.js";
 import "./global.js";
 import "./db.js";
-import recordRouter from "./routers/recordRouter.js";
+import recordsRouter from "./routers/recordsRouter.js";
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/records", recordRouter);
+app.use("/records", recordsRouter);
 
 app.listen(process.env.PORT, () =>
   console.log(`running on port :${process.env.PORT}💚💚💚💚💚💚💚`)
