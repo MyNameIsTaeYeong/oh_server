@@ -32,3 +32,10 @@ CREATE TABLE Occurrences (
     REFERENCES records(id)
 );
 ```
+
+## API
+
+```
+유저 : uri : server/Users, method : post
+
+```
