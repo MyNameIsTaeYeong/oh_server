@@ -14,23 +14,23 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE Emotions (
-	id INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     name varchar(20) NOT NULL,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-	FOREIGN KEY(userId) REFERENCES users(id)
+    FOREIGN KEY(userId) REFERENCES users(id)
 );
 
 CREATE TABLE Activities (
-	id INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     name varchar(20) NOT NULL,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-	FOREIGN KEY(userId) REFERENCES users(id)
+    FOREIGN KEY(userId) REFERENCES users(id)
 );
 
 CREATE TABLE EmoOccurrences (
-	id INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     emotionName varchar(20) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     userId INT NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE EmoOccurrences (
 );
 
 CREATE TABLE ActOccurrences (
-	id INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     activityName varchar(20) NOT NULL,
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     userId INT NOT NULL,
