@@ -1,7 +1,8 @@
-import User from "../models/User.js";
-import Record from "../models/Record.js";
+const User = require("../models/User");
+const Record = require("../models/Record");
+const POOL = require("../db");
 
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
   try {
     res.send({ done: true });
   } catch (error) {
@@ -9,7 +10,7 @@ export const logout = async (req, res) => {
   }
 };
 
-export const addRecord = async (req, res) => {
+const addRecord = async (req, res) => {
   const { userId, recordName } = req.body;
   try {
     const user = await User.findById(userId).populate("records");
@@ -26,7 +27,7 @@ export const addRecord = async (req, res) => {
   }
 };
 
-export const updateRecord = async (req, res) => {
+const updateRecord = async (req, res) => {
   const { userId, currentDate, recordId, recordIndex, recordValue } = req.body;
   const value = parseInt(recordValue);
   try {
@@ -45,7 +46,7 @@ export const updateRecord = async (req, res) => {
 //통계 로직
 // 1. 해당 기록이 발생한 날짜와 값을 가져온다.
 // 2. 1번기록이 발생한 날의 모든 기록을 1번 날짜의 값에 저장.
-export const calculateRecord = async (req, res) => {
+const calculateRecord = async (req, res) => {
   const { index, userId } = req.body;
   try {
     const user = await User.findById(userId).populate("records");
@@ -101,7 +102,22 @@ export const calculateRecord = async (req, res) => {
   }
 };
 
-export const getUsers = (req, res) => {
-  res.status(200).send("Hello World!!!!!!!!");
+const getUsers = async (req, res) => {
+  try {
+    const results = await selectByUserId(req.params.id);
+    console.log(results);
+    res.status(200).send("hohoho");
+  } catch (error) {
+    console.log(error);
+  }
+
   return res.end();
 };
+
+const selectByUserId = async (userId) => {
+  const { QUERY } = POOL;
+  const rtn = await QUERY`SELECT * FROM users WHERE id = ${userId}`;
+  return rtn;
+};
+
+module.exports = { logout, addRecord, updateRecord, calculateRecord, getUsers };

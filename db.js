@@ -1,23 +1,14 @@
-import dotenv from "dotenv";
-import mysql from "mysql2";
+const dotenv = require("dotenv");
+
 dotenv.config();
 
-const pool = mysql.createPool({
+const { MySQL } = require("fxsql");
+const { CONNECT } = MySQL;
+const POOL = CONNECT({
   host: process.env.HOST,
   user: process.env.DATABASEUSER,
-  database: process.env.DATABASE,
   password: process.env.PASSWORD,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  database: process.env.DATABASE,
 });
 
-pool.query("SELECT 1", (err, rows, fields) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("DB connect🧡🧡🧡🧡🧡🧡🧡");
-  }
-});
-
-export default pool.promise();
+module.exports = POOL;

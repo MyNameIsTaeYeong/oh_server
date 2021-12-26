@@ -6,8 +6,8 @@ const app = require("../app.js");
 
 describe("Test the root path", () => {
   test("It should response the GET method", async () => {
-    const res = await request(app).get("/users/1232");
+    const res = await request(app).get("/users/1");
     console.log(res.text);
-    expect(res.statusCode).toBe(200);
+    return expect(res.statusCode).toBe(200);
   });
 });
