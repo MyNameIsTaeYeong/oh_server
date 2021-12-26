@@ -100,3 +100,8 @@ export const calculateRecord = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getUsers = (req, res) => {
+  res.status(200).send("Hello World!!!!!!!!");
+  return res.end();
+};
