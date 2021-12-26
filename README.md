@@ -8,7 +8,7 @@
 
 ```
 CREATE TABLE Users (
-	id INT AUTO_INCREMENT NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
     email varchar(30) NOT NULL,
     PRIMARY KEY(id)
 );
