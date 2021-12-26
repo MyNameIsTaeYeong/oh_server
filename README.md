@@ -50,6 +50,8 @@ CREATE TABLE ActOccurrences (
 
 ```
 
+# INDEX
+
 # API
 
 - **GET** /users/{id} : id에 해당하는 유저조회.
