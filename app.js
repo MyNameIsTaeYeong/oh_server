@@ -1,6 +1,7 @@
-import express from "express";
+const express = require("express");
+const userRouter = require("./routers/userRouter");
+
 // import authRouter from "./routers/authRouter.js";
-import userRouter from "./routers/userRouter.js";
 // import recordsRouter from "./routers/recordsRouter.js";
 
 const app = express();

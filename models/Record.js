@@ -38,4 +38,4 @@ class Record {
     this._occurrences = occurrences;
   }
 }
-export default Record;
+module.exports = Record;
