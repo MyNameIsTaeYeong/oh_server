@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Record = require("../models/Record");
-const POOL = require("../db");
+const { selectByUserId } = require("./queries");
 
 const logout = async (req, res) => {
   try {
@@ -105,19 +105,13 @@ const calculateRecord = async (req, res) => {
 const getUsers = async (req, res) => {
   try {
     const results = await selectByUserId(req.params.id);
-    console.log(results);
-    res.status(200).send("hohoho");
+    res.status(200).json(results[0].email);
   } catch (error) {
     console.log(error);
+    res.status(500);
+  } finally {
+    return res.end();
   }
-
-  return res.end();
-};
-
-const selectByUserId = async (userId) => {
-  const { QUERY } = POOL;
-  const rtn = await QUERY`SELECT * FROM users WHERE id = ${userId}`;
-  return rtn;
 };
 
 module.exports = { logout, addRecord, updateRecord, calculateRecord, getUsers };
