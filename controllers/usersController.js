@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Record = require("../models/Record");
-const { selectByUserId } = require("./queries");
+const { selectUsers } = require("./queries");
 
 const logout = async (req, res) => {
   try {
@@ -104,7 +104,11 @@ const calculateRecord = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    const results = await selectByUserId(req.params.id);
+    const data = { id: req.params.id };
+    const results = await selectUsers(data);
+    if (results === 500) {
+      throw Error("DB 에러");
+    }
     res.status(200).json(results[0].email);
   } catch (error) {
     console.log(error);
