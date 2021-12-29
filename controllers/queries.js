@@ -26,4 +26,17 @@ const selectEmotions = async (data) => {
   }
 };
 
-module.exports = { selectUsers, selectEmotions };
+const selectActivities = async (data) => {
+  try {
+    const { QUERY, EQ } = POOL;
+    const rtn = await QUERY`SELECT * FROM Activities WHERE ${EQ(data)}`;
+    return rtn;
+  } catch (error) {
+    console.log(error);
+    return 500;
+  } finally {
+    POOL.END();
+  }
+};
+
+module.exports = { selectUsers, selectEmotions, selectActivities };
