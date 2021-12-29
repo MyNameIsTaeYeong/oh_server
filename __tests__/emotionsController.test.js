@@ -1,0 +1,22 @@
+const app = require("../app");
+const request = require("supertest");
+const queries = require("../controllers/queries");
+
+jest.mock("../controllers/queries");
+
+describe("getEmotions", () => {
+  test("정상인 경우", async () => {
+    queries.selectEmotions.mockReturnValue([
+      { id: 1, name: "기쁨", userId: 1 },
+      { id: 2, name: "슬픔", userId: 1 },
+      { id: 3, name: "분노", userId: 1 },
+    ]);
+    const res = await request(app).get("/emotions/1");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toStrictEqual([
+      { id: 1, name: "기쁨", userId: 1 },
+      { id: 2, name: "슬픔", userId: 1 },
+      { id: 3, name: "분노", userId: 1 },
+    ]);
+  });
+});
