@@ -1,5 +1,7 @@
 const express = require("express");
 const activitiesRouter = require("./routers/activitiesRouter");
+const actOccursRouter = require("./routers/actOccursRouter");
+const emoOccursRouter = require("./routers/emoOccursRouter");
 const emotionsRouter = require("./routers/emotionsRouter");
 const usersRouter = require("./routers/usersRouter");
 
@@ -11,5 +13,7 @@ app.use(express.json());
 app.use("/users", usersRouter);
 app.use("/emotions", emotionsRouter);
 app.use("/activities", activitiesRouter);
+app.use("/emooccurrences", emoOccursRouter);
+app.use("/actoccurrences", actOccursRouter);
 
 module.exports = app;

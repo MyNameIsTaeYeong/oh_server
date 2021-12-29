@@ -4,7 +4,7 @@ const queries = require("../controllers/queries");
 
 jest.mock("../controllers/queries");
 
-describe.only("getEmotions", () => {
+describe("getActivities", () => {
   test("정상인 경우", async () => {
     queries.selectActivities.mockReturnValue([
       { id: 1, name: "수면부족", userId: 1 },

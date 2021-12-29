@@ -39,4 +39,36 @@ const selectActivities = async (data) => {
   }
 };
 
-module.exports = { selectUsers, selectEmotions, selectActivities };
+const selectEmoOccurs = async (data) => {
+  try {
+    const { QUERY, EQ } = POOL;
+    const rtn = await QUERY`SELECT * FROM EmoOccurrences WHERE ${EQ(data)}`;
+    return rtn;
+  } catch (error) {
+    console.log(error);
+    return 500;
+  } finally {
+    POOL.END();
+  }
+};
+
+const selectActOccurs = async (data) => {
+  try {
+    const { QUERY, EQ } = POOL;
+    const rtn = await QUERY`SELECT * FROM ActOccurrences WHERE ${EQ(data)}`;
+    return rtn;
+  } catch (error) {
+    console.log(error);
+    return 500;
+  } finally {
+    POOL.END();
+  }
+};
+
+module.exports = {
+  selectUsers,
+  selectEmotions,
+  selectActivities,
+  selectEmoOccurs,
+  selectActOccurs,
+};
