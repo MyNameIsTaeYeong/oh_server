@@ -38,3 +38,14 @@ describe("getActOccurs", () => {
     ]);
   });
 });
+
+describe("postActOccurs", () => {
+  test("활동 기록 성공", async () => {
+    queries.insertActOccurs.mockReturnValue({ insertId: 10 });
+    const res = await request(app)
+      .post("/actoccurrences")
+      .send({ activityName: "달리기", userId: 1 });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe(10);
+  });
+});

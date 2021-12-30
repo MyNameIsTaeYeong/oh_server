@@ -20,3 +20,14 @@ describe("getEmotions", () => {
     ]);
   });
 });
+
+describe("postEmotions", () => {
+  test("감정 생성 성공", async () => {
+    queries.insertEmotions.mockReturnValue({ insertId: 10 });
+    const res = await request(app)
+      .post("/emotions")
+      .send({ name: "ㅁㅁㅁㅁ", userId: 1 });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe(10);
+  });
+});

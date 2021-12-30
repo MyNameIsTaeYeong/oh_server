@@ -1,4 +1,4 @@
-const { selectActOccurs } = require("./queries");
+const { selectActOccurs, insertActOccurs } = require("./queries");
 
 const getActOccurs = async (req, res) => {
   try {
@@ -16,4 +16,20 @@ const getActOccurs = async (req, res) => {
   }
 };
 
-module.exports = { getActOccurs };
+const postActOccurs = async (req, res) => {
+  try {
+    const { activityName, userId } = req.body;
+    const results = await insertActOccurs({ activityName, userId });
+    if (results === 500) {
+      throw Error("DB 에러");
+    }
+    res.status(200).json(results.insertId);
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  } finally {
+    return res.end();
+  }
+};
+
+module.exports = { getActOccurs, postActOccurs };
