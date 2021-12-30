@@ -78,6 +78,19 @@ const insertEmotions = async (data) => {
   }
 };
 
+const insertActivities = async (data) => {
+  try {
+    const { QUERY, VALUES } = POOL;
+    const rtn = await QUERY`INSERT INTO Activities ${VALUES(data)}`;
+    return rtn;
+  } catch (error) {
+    console.log(error);
+    return 500;
+  } finally {
+    POOL.END();
+  }
+};
+
 module.exports = {
   selectUsers,
   selectEmotions,
@@ -85,4 +98,5 @@ module.exports = {
   selectEmoOccurs,
   selectActOccurs,
   insertEmotions,
+  insertActivities,
 };

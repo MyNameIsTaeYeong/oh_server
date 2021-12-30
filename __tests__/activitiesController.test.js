@@ -23,3 +23,14 @@ describe("getActivities", () => {
     ]);
   });
 });
+
+describe("postActivities", () => {
+  test("활동 생성 성공", async () => {
+    queries.insertActivities.mockReturnValue({ insertId: 10 });
+    const res = await request(app)
+      .post("/activities")
+      .send({ name: "달리기", userId: 1 });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toBe(10);
+  });
+});
