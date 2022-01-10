@@ -1,12 +1,12 @@
 const app = require("../app");
 const request = require("supertest");
-const queries = require("../controllers/queries");
+const POOL = require("../db");
 
-jest.mock("../controllers/queries");
+jest.mock("../db");
 
 describe("getActOccurs", () => {
-  test("정상인 경우", async () => {
-    queries.selectActOccurs.mockReturnValue([
+  test("getActOccurs는 성공하면 ActOccur배열을 반환해야 한다.", async () => {
+    POOL.QUERY.mockReturnValue([
       {
         id: 1,
         activityName: "운동",
@@ -37,15 +37,33 @@ describe("getActOccurs", () => {
       },
     ]);
   });
+
+  test("getActOccurs는 실패하면 500코드를 반환해야 한다.", async () => {
+    POOL.QUERY.mockImplementation(() => {
+      throw new Error("에러발생");
+    });
+    const res = await request(app).get("/actoccurrences/1");
+    expect(res.statusCode).toBe(500);
+  });
 });
 
 describe("postActOccurs", () => {
-  test("활동 기록 성공", async () => {
-    queries.insertActOccurs.mockReturnValue({ insertId: 10 });
+  test("postActOccurs는 성공하면 삽입된 활동기록의 아이디를 반환해햐 한다.", async () => {
+    POOL.QUERY.mockReturnValue({ insertId: 10 });
     const res = await request(app)
       .post("/actoccurrences")
       .send({ activityName: "달리기", userId: 1 });
     expect(res.statusCode).toBe(200);
     expect(res.body).toBe(10);
+  });
+
+  test("postActOccurs는 실패하면 500코드를 반환해야한다.", async () => {
+    POOL.QUERY.mockImplementation(() => {
+      throw new Error("에러발생");
+    });
+    const res = await request(app)
+      .post("/actoccurrences")
+      .send({ activityName: "달리기", userId: 1 });
+    expect(res.statusCode).toBe(500);
   });
 });
