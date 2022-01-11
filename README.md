@@ -9,7 +9,7 @@
 ```
 CREATE TABLE Users (
     id INT AUTO_INCREMENT NOT NULL,
-    email varchar(30) NOT NULL,
+    email varchar(30)  UNIQUE NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -54,7 +54,7 @@ CREATE TABLE ActOccurrences (
 
 # API
 
-- **GET** /users/{id} : id에 해당하는 유저조회.
+- **GET** /users/{email} : email에 해당하는 유저아이디 조회.
 - **GET** /emotions/{userId} : 감정 조회.
 - **GET** /activities/{userId} : 활동 조회.
 - **GET** /emooccurrences/{userId} : 감정 기록 조회.
