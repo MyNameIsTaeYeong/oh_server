@@ -23,7 +23,7 @@ const postUsers = async (req, res) => {
   try {
     const results = await QUERY`INSERT INTO Users ${VALUES(req.body)}`;
 
-    Promise.all([
+    await Promise.all([
       QUERY`INSERT INTO Emotions ${VALUES({
         name: "기쁨",
         userId: results.insertId,
@@ -34,6 +34,18 @@ const postUsers = async (req, res) => {
       })}`,
       QUERY`INSERT INTO Emotions ${VALUES({
         name: "슬픔",
+        userId: results.insertId,
+      })}`,
+      QUERY`INSERT INTO Activities ${VALUES({
+        name: "운동",
+        userId: results.insertId,
+      })}`,
+      QUERY`INSERT INTO Activities ${VALUES({
+        name: "독서",
+        userId: results.insertId,
+      })}`,
+      QUERY`INSERT INTO Activities ${VALUES({
+        name: "설거지",
         userId: results.insertId,
       })}`,
     ]);

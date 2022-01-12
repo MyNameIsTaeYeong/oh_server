@@ -11,7 +11,6 @@ const getEmoOccurs = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };
@@ -25,7 +24,6 @@ const postEmoOccurs = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };
