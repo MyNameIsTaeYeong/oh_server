@@ -28,4 +28,33 @@ const postEmoOccurs = async (req, res) => {
   }
 };
 
-module.exports = { getEmoOccurs, postEmoOccurs };
+const postEmoAndAct = async (req, res) => {
+  try {
+    const { QUERY } = POOL;
+    const results = await Promise.all([
+      QUERY`SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
+            WHERE DATE_FORMAT(date,'%y-%m-%d') 
+            IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
+                FROM EmoOccurrences 
+                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
+                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))
+            AND userId=${req.params.userId}
+            GROUP BY activityName;`,
+      QUERY`SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
+            WHERE DATE_FORMAT(date,'%y-%m-%d') 
+            IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
+                FROM EmoOccurrences 
+                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
+                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))  AND userId=${req.params.userId}
+            GROUP BY emotionName;`,
+    ]);
+    res.status(200).json(results);
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  } finally {
+    return res.end();
+  }
+};
+
+module.exports = { getEmoOccurs, postEmoOccurs, postEmoAndAct };
