@@ -11,7 +11,6 @@ const getActOccurs = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };
@@ -25,7 +24,6 @@ const postActOccurs = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };

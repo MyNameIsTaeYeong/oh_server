@@ -64,7 +64,8 @@ CREATE TABLE ActOccurrences (
 - **POST** /activities : 활동 생성.
 - **POST** /emooccurrences : 감정 기록.
 - **POST** /actoccurrences : 활동 기록.
-- **POST** /EmoOccurrences/{userId}/ActOccurrences : 감정과 활동의 관계보기.
+- **POST** /EmoOccurrences/{userId}/ActOccurrences : 감정과 연관된 것들 보기
+- **POST** /ActOccurrences/{userId}/EmoOccurrences : 활동과 연관된 것들 보기
 - **DELETE** /emotions/{id} : 감정 삭제.
 - **DELETE** /activities/{id} : 활동 삭제.
 - **DELETE** /emooccurrences/{id} : 감정 기록 삭제.

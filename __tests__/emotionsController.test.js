@@ -49,3 +49,19 @@ describe("postEmotions", () => {
     expect(res.statusCode).toBe(500);
   });
 });
+
+describe("deleteEmotions", () => {
+  test("deleteEmotions는 성공하면 200코드를 반환해야 한다.", async () => {
+    POOL.QUERY.mockReturnValue();
+    const res = await request(app).delete("/emotions/1");
+    expect(res.status).toBe(200);
+  });
+
+  test("deleteEmotions는 실패하면 500코드를 반환해야 한다.", async () => {
+    POOL.QUERY.mockImplementation(() => {
+      throw new Error();
+    });
+    const res = await request(app).delete("/emotions/1");
+    expect(res.status).toBe(500);
+  });
+});

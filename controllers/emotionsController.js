@@ -11,7 +11,6 @@ const getEmotions = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };
@@ -25,9 +24,21 @@ const postEmotions = async (req, res) => {
     console.log(error);
     res.status(500);
   } finally {
-    POOL.END();
     return res.end();
   }
 };
 
-module.exports = { getEmotions, postEmotions };
+const deleteEmotions = async (req, res) => {
+  try {
+    const { QUERY } = POOL;
+    await QUERY`DELETE FROM Emotions where id=${req.params.id}`;
+    res.status(200);
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  } finally {
+    return res.end();
+  }
+};
+
+module.exports = { getEmotions, postEmotions, deleteEmotions };
