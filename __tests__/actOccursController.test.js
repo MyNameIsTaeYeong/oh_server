@@ -67,3 +67,31 @@ describe("postActOccurs", () => {
     expect(res.statusCode).toBe(500);
   });
 });
+
+describe("postActAndEmo", () => {
+  test("postActAndEmo는 성공하면 200코드와 연관된 활동과 감정의 갯수를 가진 배열을 리턴해야 한다.", async () => {
+    POOL.QUERY.mockReturnValue([{ 기쁨: 3 }, { 슬픔: 1 }]);
+    const res = await request(app)
+      .post("/ActOccurrences/{userId}/EmoOccurrences")
+      .send({
+        activityName: "달리기",
+      });
+    expect(res.status).toBe(200);
+    expect(res.body).toStrictEqual([
+      [{ 기쁨: 3 }, { 슬픔: 1 }],
+      [{ 기쁨: 3 }, { 슬픔: 1 }],
+    ]);
+  });
+
+  test("postActAndEmo는 실패하면 500코드를 반환해야 한다.", async () => {
+    POOL.QUERY.mockImplementation(() => {
+      throw new Error();
+    });
+    const res = await request(app)
+      .post("/ActOccurrences/{userId}/EmoOccurrences")
+      .send({
+        activityName: "달리기",
+      });
+    expect(res.status).toBe(500);
+  });
+});

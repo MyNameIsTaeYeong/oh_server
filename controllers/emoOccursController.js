@@ -32,6 +32,13 @@ const postEmoAndAct = async (req, res) => {
   try {
     const { QUERY } = POOL;
     const results = await Promise.all([
+      QUERY`SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
+            WHERE DATE_FORMAT(date,'%y-%m-%d') 
+            IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
+                FROM EmoOccurrences 
+                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
+                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))  AND userId=${req.params.userId}
+            GROUP BY emotionName;`,
       QUERY`SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
             WHERE DATE_FORMAT(date,'%y-%m-%d') 
             IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
@@ -40,13 +47,6 @@ const postEmoAndAct = async (req, res) => {
                 GROUP BY DATE_FORMAT(date,'%y-%m-%d'))
             AND userId=${req.params.userId}
             GROUP BY activityName;`,
-      QUERY`SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
-            WHERE DATE_FORMAT(date,'%y-%m-%d') 
-            IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
-                FROM EmoOccurrences 
-                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
-                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))  AND userId=${req.params.userId}
-            GROUP BY emotionName;`,
     ]);
     res.status(200).json(results);
   } catch (error) {
