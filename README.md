@@ -18,7 +18,7 @@ CREATE TABLE Emotions (
     name varchar(20) NOT NULL,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-	FOREIGN KEY(userId) REFERENCES users(id)
+	FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 CREATE TABLE Activities (
@@ -26,7 +26,7 @@ CREATE TABLE Activities (
     name varchar(20) NOT NULL,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-	FOREIGN KEY(userId) REFERENCES users(id)
+	FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 CREATE TABLE EmoOccurrences (
@@ -35,7 +35,7 @@ CREATE TABLE EmoOccurrences (
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(userId) REFERENCES users(id)
+    FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 CREATE TABLE ActOccurrences (
@@ -44,7 +44,7 @@ CREATE TABLE ActOccurrences (
     date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     userId INT NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(userId) REFERENCES users(id)
+    FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 
