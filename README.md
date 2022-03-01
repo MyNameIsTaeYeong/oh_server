@@ -47,7 +47,11 @@ CREATE TABLE ActOccurrences (
     FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
-
+CREATE TABLE RefreshTokens (
+    userId INT NOT NUll,
+    refreshToken varchar(255) NOT NULL,
+    FOREIGN KEY(userId) REFERENCES Users(id)
+);
 ```
 
 # INDEX
