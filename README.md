@@ -18,7 +18,7 @@ CREATE TABLE Emotions (
     name varchar(20) NOT NULL,
     userId INT NOT NULL,
     PRIMARY KEY(id),
- 	  FOREIGN KEY(userId) REFERENCES Users(id)
+ 	FOREIGN KEY(userId) REFERENCES Users(id)
 );
 
 CREATE TABLE Activities (
