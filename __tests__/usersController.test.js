@@ -1,17 +1,24 @@
 const request = require("supertest");
 const app = require("../app");
-const { SERVER } = require("../global");
 const POOL = require("../db");
-
+const dotenv = require("dotenv");
+const { issueAtoken } = require("../utilities");
+dotenv.config();
 jest.mock("../db");
+jest.mock("../utilities");
 
 // [ RowDataPacket { id: 1, email: 'imtaebari@gmail.com' } ]
 describe("getUsers", () => {
-  test("getUsers는 성공하면 유저아이디를 반환해야 한다.", async () => {
+  test("getUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환해야 한다.", async () => {
     POOL.QUERY.mockReturnValue([{ id: 1, email: "imtaebari@gmail.com" }]);
+    issueAtoken.mockReturnValue("assdqwasdjnj.qdwsqs.qwead");
     const res = await request(app).get("/users/imtaebari@gmail.com");
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toBe(1);
+    expect(res.body).toStrictEqual({
+      code: 200,
+      id: 1,
+      accessToken: "assdqwasdjnj.qdwsqs.qwead",
+      refreshToken: "assdqwasdjnj.qdwsqs.qwead",
+    });
   });
 
   test("getUsers는 실패하면 500코드를 반환해야 한다.", async () => {
@@ -24,7 +31,7 @@ describe("getUsers", () => {
 });
 
 describe("postUsers", () => {
-  test("postUsers는 성공하면 유저아이디를 반환해야 한다.", async () => {
+  test("postUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환해야 한다.", async () => {
     POOL.TRANSACTION.mockImplementation(() => {
       return {
         QUERY: jest.fn(() => {
@@ -34,10 +41,15 @@ describe("postUsers", () => {
         VALUES: jest.fn(),
       };
     });
-
+    issueAtoken.mockReturnValue("assdqwasdjnj.qdwsqs.qwead");
     const res = await request(app).post("/users").send({ email: "hahaha" });
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toBe(10);
+
+    expect(res.body).toStrictEqual({
+      code: 200,
+      id: 10,
+      accessToken: "assdqwasdjnj.qdwsqs.qwead",
+      refreshToken: "assdqwasdjnj.qdwsqs.qwead",
+    });
   });
 
   test("postUsers는 실패하면 500코드를 반환해야 한다.", async () => {
@@ -65,7 +77,7 @@ describe("postUsers", () => {
     });
 
     const res = await request(app).post("/users").send({ email: "hahaha" });
-    expect(res.header.location).toBe(`${SERVER}/users/hahaha`);
+    expect(res.header.location).toBe(`${process.env.SERVER}/users/hahaha`);
     expect(res.statusCode).toBe(302);
   });
 });
