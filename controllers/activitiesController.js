@@ -7,7 +7,16 @@ const getActivities = async (req, res) => {
       userId: req.params.id,
     })}`;
 
-    res.status(200).json(results);
+    const rtn = {
+      code: 200,
+      results,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -20,7 +29,17 @@ const postActivities = async (req, res) => {
   try {
     const { QUERY, VALUES } = POOL;
     const results = await QUERY`INSERT INTO Activities ${VALUES(req.body)}`;
-    res.status(200).json(results.insertId);
+
+    const rtn = {
+      code: 200,
+      insertId: results.insertId,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.status(200).json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -33,7 +52,16 @@ const deleteActivities = async (req, res) => {
   try {
     const { QUERY } = POOL;
     await QUERY`DELETE FROM Activities WHERE id = ${req.params.id}`;
-    res.status(200);
+
+    const rtn = {
+      code: 200,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
