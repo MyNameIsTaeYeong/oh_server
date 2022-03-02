@@ -1,4 +1,5 @@
 const express = require("express");
+const { verifyToken } = require("./middlewares");
 const activitiesRouter = require("./routers/activitiesRouter");
 const actOccursRouter = require("./routers/actOccursRouter");
 const emoOccursRouter = require("./routers/emoOccursRouter");
@@ -11,6 +12,8 @@ const app = express();
 app.use(express.json());
 
 app.use("/users", usersRouter);
+
+app.use(verifyToken);
 app.use("/emotions", emotionsRouter);
 app.use("/activities", activitiesRouter);
 app.use("/emooccurrences", emoOccursRouter);
