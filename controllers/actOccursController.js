@@ -6,7 +6,17 @@ const getActOccurs = async (req, res) => {
     const results = await QUERY`SELECT * FROM ActOccurrences WHERE ${EQ({
       userId: req.params.id,
     })}`;
-    res.status(200).json(results);
+
+    const rtn = {
+      code: 200,
+      results,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -19,7 +29,17 @@ const postActOccurs = async (req, res) => {
   try {
     const { QUERY, VALUES } = POOL;
     const results = await QUERY`INSERT INTO ActOccurrences ${VALUES(req.body)}`;
-    res.status(200).json(results.insertId);
+
+    const rtn = {
+      code: 200,
+      insertId: results.insertId,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.status(200).json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
@@ -49,7 +69,17 @@ const postActAndEmo = async (req, res) => {
             AND userId=${req.params.userId}
             GROUP BY activityName;`,
     ]);
-    res.status(200).json(results);
+
+    const rtn = {
+      code: 200,
+      results,
+    };
+
+    if (req.newAccessToken) {
+      rtn.accessToken = req.newAccessToken;
+    }
+
+    res.json(rtn);
   } catch (error) {
     console.log(error);
     res.status(500);
