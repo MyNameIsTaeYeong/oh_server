@@ -66,7 +66,7 @@ describe("getActivities", () => {
       .get("/activities/1")
       .set("authorization", accessToken);
 
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("getActivities는 조회에 실패하면 500코드를 반환해야 한다.", async () => {
@@ -119,7 +119,7 @@ describe("postActivities", () => {
       .post("/activities")
       .send({ name: "달리기", userId: 1 })
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("postActivities는 실패하면 500코드를 반환해야 한다.", async () => {
@@ -162,7 +162,7 @@ describe("deleteActivities", () => {
     const res = await request(app)
       .delete("/activities/1")
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("deleteActivities를 삭제에 실피하면 500코드를 반환해야 한다.", async () => {

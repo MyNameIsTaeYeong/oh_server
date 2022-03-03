@@ -101,7 +101,7 @@ describe("getEmoOccurs", () => {
       .get("/emooccurrences/1")
       .set("authorization", accessToken);
 
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("getEmoOccurs는 조회에 실패하면 500코드를 반환해야 한다.", async () => {
@@ -149,7 +149,7 @@ describe("postEmoOccurs", () => {
       .post("/emooccurrences")
       .send({ emotionName: "안기쁨", userId: 1 })
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("postEmoOccurs는 실패하면 500코드를 반환해야 한다.", async () => {
@@ -205,7 +205,7 @@ describe("postEmoAndAct", () => {
       .send({ emotionName: "안기쁨" })
       .set("authorization", accessToken);
 
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("postEmoAndAct는 실패하면 500코드를 리턴해야 한다.", async () => {

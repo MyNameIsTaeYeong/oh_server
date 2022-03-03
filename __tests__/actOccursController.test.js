@@ -101,9 +101,9 @@ describe("getActOccurs", () => {
     const accessToken = issueAtoken(1, "access", "0s");
     const res = await request(app)
       .get("/actoccurrences/1")
-      .set("athorization", accessToken);
+      .set("authorization", accessToken);
 
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("getActOccurs는 조회에 실패하면 500코드를 반환해야 한다.", async () => {
@@ -154,7 +154,7 @@ describe("postActOccurs", () => {
       .send({ activityName: "달리기", userId: 1 })
       .set("authorization", accessToken);
 
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("postActOccurs는 실패하면 500코드를 반환해야한다.", async () => {
@@ -213,7 +213,7 @@ describe("postActAndEmo", () => {
         activityName: "달리기",
       })
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("postActAndEmo는 실패하면 500코드를 반환해야 한다.", async () => {

@@ -17,15 +17,23 @@ const verifyToken = (req, res, next) => {
 
     return next();
   } catch (error) {
+    console.log(error);
+
     // 403 Forbidden
-    if ((error.name = "TokenExpiredError")) {
-      console.log(req.headers.authorization);
-      res.status(403);
+    if (error.name === "TokenExpiredError") {
+      res.json({
+        code: 403,
+        message: "TokenExpiredError",
+      });
+
       return res.end();
     }
     // 401 Unauthorized
-    if ((error.name = "JsonWebTokenError")) {
-      res.status(401);
+    if (error.name === "JsonWebTokenError") {
+      res.json({
+        code: 401,
+        message: "JsonWebTokenError",
+      });
       return res.end();
     }
 
