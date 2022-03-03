@@ -58,7 +58,7 @@ describe("getEmotions", () => {
     const res = await request(app)
       .get("/emotions/1")
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("getEmotions는 데이터조회가 실패하면 500코드를 반환해야 한다.", async () => {
@@ -107,7 +107,7 @@ describe("postEmotions", () => {
       .post("/emotions")
       .send({ name: "ㅁㅁㅁㅁ", userId: 1 })
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
     expect(res.body.accessToken).toBeUndefined();
   });
 
@@ -150,7 +150,7 @@ describe("deleteEmotions", () => {
     const res = await request(app)
       .delete("/emotions/1")
       .set("authorization", accessToken);
-    expect(res.status).toBe(403);
+    expect(res.body.code).toBe(403);
   });
 
   test("deleteEmotions는 삭제에 실피하면 500코드를 반환해야 한다.", async () => {

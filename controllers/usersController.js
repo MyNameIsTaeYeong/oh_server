@@ -6,7 +6,7 @@ dotenv.config();
 
 const getUsers = async (req, res) => {
   try {
-    const { QUERY, EQ, VALUES } = POOL;
+    const { QUERY, EQ } = POOL;
     const results = await QUERY`SELECT * FROM Users WHERE ${EQ({
       email: req.params.email,
     })}`;
@@ -14,11 +14,9 @@ const getUsers = async (req, res) => {
     const accessToken = issueAtoken(userId, "access", "60m");
     const refreshToken = issueAtoken(userId, "refresh", "1800m");
 
-    await QUERY`UPDATE RefreshTokens SET ${VALUES({ refreshToken })} WHERE ${EQ(
-      {
-        userId,
-      }
-    )}`;
+    await QUERY`UPDATE RefreshTokens SET ${EQ({ refreshToken })} WHERE ${EQ({
+      userId,
+    })}`;
 
     res.json({
       code: 200,
