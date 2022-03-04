@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const { issueAtoken } = require("./utilities");
 dotenv.config();
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(
       req.headers.authorization,
@@ -12,6 +12,19 @@ const verifyToken = (req, res, next) => {
     );
 
     if (decoded.which === "refresh") {
+      const { QUERY, EQ } = POOL;
+      const row = await QUERY`SELECT refreshToken FROM RefreshTokens WHERE ${EQ(
+        {
+          userId: decoded.id,
+        }
+      )}`;
+      if (row[0].refreshToken !== req.headers.authorization) {
+        return res.status(401).json({
+          code: 401,
+          message: "JsonWebTokenError",
+        });
+      }
+
       req.newAccessToken = issueAtoken(decoded.id, "access", "60m");
     }
 
@@ -30,7 +43,7 @@ const verifyToken = (req, res, next) => {
     }
     // 401 Unauthorized
     if (error.name === "JsonWebTokenError") {
-      res.json({
+      res.status(401).json({
         code: 401,
         message: "JsonWebTokenError",
       });
