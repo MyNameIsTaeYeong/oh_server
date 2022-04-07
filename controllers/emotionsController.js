@@ -2,14 +2,17 @@ const POOL = require("../db");
 
 const getEmotions = async (req, res) => {
   try {
-    const { QUERY, EQ } = POOL;
-    const results = await QUERY`SELECT * FROM Emotions WHERE ${EQ({
-      userId: req.params.id,
-    })}`;
-
+    // const { QUERY, EQ } = POOL;
+    // const results = await QUERY`SELECT * FROM Emotions WHERE ${EQ({
+    //   userId: req.params.id,
+    // })}`;
+    const results = await POOL.execute(
+      "SELECT * FROM Emotions WHERE userId=?",
+      [req.params.id]
+    );
     const rtn = {
       code: 200,
-      results,
+      results: results[0],
     };
 
     if (req.newAccessToken) {
@@ -27,12 +30,17 @@ const getEmotions = async (req, res) => {
 
 const postEmotions = async (req, res) => {
   try {
-    const { QUERY, VALUES } = POOL;
-    const results = await QUERY`INSERT INTO Emotions ${VALUES(req.body)}`;
+    // const { QUERY, VALUES } = POOL;
+    // const results = await QUERY`INSERT INTO Emotions ${VALUES(req.body)}`;
+    const { name, userId } = req.body;
+    const results = await POOL.execute(
+      "INSERT INTO Emotions(name, userId) VALUES(?, ?)",
+      [name, userId]
+    );
 
     const rtn = {
       code: 200,
-      insertId: results.insertId,
+      insertId: results[0].insertId,
     };
 
     if (req.newAccessToken) {
@@ -50,9 +58,9 @@ const postEmotions = async (req, res) => {
 
 const deleteEmotions = async (req, res) => {
   try {
-    const { QUERY } = POOL;
-    await QUERY`DELETE FROM Emotions where id=${req.params.id}`;
-
+    // const { QUERY } = POOL;
+    // await QUERY`DELETE FROM Emotions where id=${req.params.id}`;
+    await POOL.execute("DELETE FROM Emotions where id=?", [req.params.id]);
     const rtn = {
       code: 200,
     };

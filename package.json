@@ -12,12 +12,12 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "fxsql": "^1.6.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.3.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12",
     "jest": "^27.4.5",
+    "nodemon": "^2.0.12",
     "supertest": "^6.1.6"
   }
 }

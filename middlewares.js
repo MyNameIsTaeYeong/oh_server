@@ -12,12 +12,12 @@ const verifyToken = async (req, res, next) => {
     );
 
     if (decoded.which === "refresh") {
-      const { QUERY, EQ } = POOL;
-      const row = await QUERY`SELECT refreshToken FROM RefreshTokens WHERE ${EQ(
-        {
-          userId: decoded.id,
-        }
-      )}`;
+      const row = await POOL.execute(
+        "SELECT refreshToken FROM RefreshTokens WHERE userId=?",
+        [decoded.id]
+      );
+
+      console.log(row);
       if (row[0].refreshToken !== req.headers.authorization) {
         return res.status(401).json({
           code: 401,
