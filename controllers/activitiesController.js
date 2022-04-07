@@ -2,14 +2,13 @@ const POOL = require("../db");
 
 const getActivities = async (req, res) => {
   try {
-    const { QUERY, EQ } = POOL;
-    const results = await QUERY`SELECT * FROM Activities WHERE ${EQ({
-      userId: req.params.id,
-    })}`;
-
+    const results = await POOL.execute(
+      `SELECT * FROM Activities WHERE userId=?`,
+      [req.params.id]
+    );
     const rtn = {
       code: 200,
-      results,
+      results: results[0],
     };
 
     if (req.newAccessToken) {
@@ -27,12 +26,14 @@ const getActivities = async (req, res) => {
 
 const postActivities = async (req, res) => {
   try {
-    const { QUERY, VALUES } = POOL;
-    const results = await QUERY`INSERT INTO Activities ${VALUES(req.body)}`;
-
+    const { name, userId } = req.body;
+    const results = await POOL.execute(
+      `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
+      [name, userId]
+    );
     const rtn = {
       code: 200,
-      insertId: results.insertId,
+      insertId: results[0].insertId,
     };
 
     if (req.newAccessToken) {
@@ -50,9 +51,7 @@ const postActivities = async (req, res) => {
 
 const deleteActivities = async (req, res) => {
   try {
-    const { QUERY } = POOL;
-    await QUERY`DELETE FROM Activities WHERE id = ${req.params.id}`;
-
+    await POOL.execute(`DELETE FROM Activities WHERE id=?`, [req.params.id]);
     const rtn = {
       code: 200,
     };

@@ -2,14 +2,17 @@ const POOL = require("../db");
 
 const getEmoOccurs = async (req, res) => {
   try {
-    const { QUERY, EQ } = POOL;
-    const results = await QUERY`SELECT * FROM EmoOccurrences WHERE ${EQ({
-      userId: req.params.id,
-    })}`;
-
+    // const { QUERY, EQ } = POOL;
+    // const results = await QUERY`SELECT * FROM EmoOccurrences WHERE ${EQ({
+    //   userId: req.params.id,
+    // })}`;
+    const results = await POOL.execute(
+      "SELECT * FROM EmoOccurrences WHERE userId=?",
+      [req.params.id]
+    );
     const rtn = {
       code: 200,
-      results,
+      results: results[0],
     };
 
     if (req.newAccessToken) {
@@ -27,12 +30,16 @@ const getEmoOccurs = async (req, res) => {
 
 const postEmoOccurs = async (req, res) => {
   try {
-    const { QUERY, VALUES } = POOL;
-    const results = await QUERY`INSERT INTO EmoOccurrences ${VALUES(req.body)}`;
-
+    // const { QUERY, VALUES } = POOL;
+    // const results = await QUERY`INSERT INTO EmoOccurrences ${VALUES(req.body)}`;
+    const { emotionName, userId, recordId } = req.body;
+    const results = await POOL.execute(
+      "INSERT INTO EmoOccurrences(emotionName, userId, recordId) VALUES(?,?,?)",
+      [emotionName, userId, recordId]
+    );
     const rtn = {
       code: 200,
-      insertId: results.insertId,
+      insertId: results[0].insertId,
     };
 
     if (req.newAccessToken) {
@@ -50,24 +57,35 @@ const postEmoOccurs = async (req, res) => {
 
 const postEmoAndAct = async (req, res) => {
   try {
-    const { QUERY } = POOL;
-    const results = await Promise.all([
-      QUERY`SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
+    // const { QUERY } = POOL;
+    const temp = await Promise.all([
+      POOL.execute(
+        `SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
             WHERE DATE_FORMAT(date,'%y-%m-%d') 
             IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
                 FROM EmoOccurrences 
-                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
-                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))  AND userId=${req.params.userId}
+                WHERE emotionName=? AND userId=?
+                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))  AND userId=?
             GROUP BY emotionName;`,
-      QUERY`SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
+        [req.body.emotionName, req.params.userId, req.params.userId]
+      ),
+
+      POOL.execute(
+        `SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
             WHERE DATE_FORMAT(date,'%y-%m-%d') 
             IN (SELECT DATE_FORMAT(date,'%y-%m-%d') as date
                 FROM EmoOccurrences 
-                WHERE emotionName=${req.body.emotionName} AND userId=${req.params.userId}
+                WHERE emotionName=? AND userId=?
                 GROUP BY DATE_FORMAT(date,'%y-%m-%d'))
-            AND userId=${req.params.userId}
+            AND userId=?
             GROUP BY activityName;`,
+        [req.body.emotionName, req.params.userId, req.params.userId]
+      ),
     ]);
+
+    const results = [];
+    results.push(temp[0][0]);
+    results.push(temp[1][0]);
 
     const rtn = {
       code: 200,
