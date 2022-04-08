@@ -17,8 +17,7 @@ const verifyToken = async (req, res, next) => {
         [decoded.id]
       );
 
-      console.log(row);
-      if (row[0].refreshToken !== req.headers.authorization) {
+      if (row[0][0].refreshToken !== req.headers.authorization) {
         return res.status(401).json({
           code: 401,
           message: "JsonWebTokenError",
