@@ -19,6 +19,6 @@ app.use("/emotions", emotionsRouter);
 app.use("/activities", activitiesRouter);
 app.use("/emooccurrences", emoOccursRouter);
 app.use("/actoccurrences", actOccursRouter);
-app.use("/shareTags", shareTagsRouter);
+app.use("/sharetags", shareTagsRouter);
 
 module.exports = app;
