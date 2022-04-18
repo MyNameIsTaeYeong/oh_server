@@ -1,4 +1,4 @@
-const POOL = require("../db");
+const { POOL } = require("../db");
 
 const getEmoOccurs = async (req, res) => {
   try {

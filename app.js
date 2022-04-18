@@ -4,6 +4,7 @@ const activitiesRouter = require("./routers/activitiesRouter");
 const actOccursRouter = require("./routers/actOccursRouter");
 const emoOccursRouter = require("./routers/emoOccursRouter");
 const emotionsRouter = require("./routers/emotionsRouter");
+const likesRouter = require("./routers/likesRouter");
 const shareTagsRouter = require("./routers/shareTagsRouter");
 const usersRouter = require("./routers/usersRouter");
 
@@ -20,5 +21,6 @@ app.use("/activities", activitiesRouter);
 app.use("/emooccurrences", emoOccursRouter);
 app.use("/actoccurrences", actOccursRouter);
 app.use("/sharetags", shareTagsRouter);
+app.use("/likes", likesRouter);
 
 module.exports = app;

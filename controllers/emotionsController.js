@@ -1,4 +1,4 @@
-const POOL = require("../db");
+const { POOL } = require("../db");
 
 const getEmotions = async (req, res) => {
   try {

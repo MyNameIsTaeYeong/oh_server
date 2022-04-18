@@ -1,17 +1,19 @@
-const POOL = require("../db");
+const { POOL } = require("../db");
 
 const getShareTags = async (req, res) => {
   try {
-    const page = Number(req.query.page) * 100;
+    const page = Number(req.query.page) * 20;
     const results = await POOL.execute(
       `SELECT id, content, likeCnt, ShareTags.userId, tagId as myLike
        FROM ShareTags 
        LEFT JOIN Likes
        ON Likes.userId=? 
        AND ShareTags.id = Likes.tagId
-       LIMIT ${page}, 100`,
+       LIMIT ${page}, 20`,
       [req.params.id]
     );
+
+    console.log(page);
 
     const rtn = {
       code: 200,
