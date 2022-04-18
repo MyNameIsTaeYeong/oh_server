@@ -1,4 +1,4 @@
-const POOL = require("../db");
+const { POOL, getConnection } = require("../db");
 const dotenv = require("dotenv");
 const { issueAtoken } = require("../utilities");
 
@@ -6,10 +6,6 @@ dotenv.config();
 
 const getUsers = async (req, res) => {
   try {
-    // const { QUERY, EQ } = POOL;
-    // const results = await QUERY`SELECT * FROM Users WHERE ${EQ({
-    //   email: req.params.email,
-    // })}`;
     const results = await POOL.execute(`SELECT * FROM Users WHERE email=?`, [
       req.params.email,
     ]);
@@ -21,10 +17,6 @@ const getUsers = async (req, res) => {
       `UPDATE RefreshTokens SET refreshToken=? WHERE userId=?`,
       [refreshToken, userId]
     );
-
-    // await QUERY`UPDATE RefreshTokens SET ${EQ({ refreshToken })} WHERE ${EQ({
-    //   userId,
-    // })}`;
 
     res.json({
       code: 200,
@@ -41,14 +33,17 @@ const getUsers = async (req, res) => {
 };
 
 const postUsers = async (req, res) => {
-  // const { TRANSACTION } = POOL;
-  // const { QUERY, COMMIT, VALUES, ROLLBACK } = await TRANSACTION();
+  const conn = await getConnection();
+  if (conn === -1) {
+    res.status(500);
+    return res.end();
+  }
 
   try {
-    await POOL.query("START TRANSACTION");
+    conn.beginTransaction();
 
     const { email } = req.body;
-    const results = await POOL.execute(`INSERT INTO Users(email) VALUES(?)`, [
+    const results = await conn.execute(`INSERT INTO Users(email) VALUES(?)`, [
       email,
     ]);
 
@@ -56,38 +51,37 @@ const postUsers = async (req, res) => {
     const accessToken = issueAtoken(userId, "access", "60m");
     const refreshToken = issueAtoken(userId, "refresh", "1800m");
 
-    await Promise.all([
-      POOL.execute(
-        `INSERT INTO RefreshTokens(userId, refreshToken) VALUES(?, ?)`,
-        [userId, refreshToken]
-      ),
-      POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
-        "기쁨",
-        userId,
-      ]),
-      POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
-        "화남",
-        userId,
-      ]),
-      POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
-        "슬픔",
-        userId,
-      ]),
-      POOL.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-        "운동",
-        userId,
-      ]),
-      POOL.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-        "독서",
-        userId,
-      ]),
-      POOL.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-        "설거지",
-        userId,
-      ]),
+    conn.execute(
+      `INSERT INTO RefreshTokens(userId, refreshToken) VALUES(?, ?)`,
+      [userId, refreshToken]
+    );
+    conn.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+      "기쁨",
+      userId,
     ]);
-    POOL.query("COMMIT");
-    // await COMMIT();
+    conn.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+      "화남",
+      userId,
+    ]);
+    conn.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+      "슬픔",
+      userId,
+    ]);
+    conn.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
+      "운동",
+      userId,
+    ]);
+    conn.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
+      "독서",
+      userId,
+    ]);
+    conn.execute(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
+      "설거지",
+      userId,
+    ]);
+
+    await conn.commit();
+
     res.json({
       code: 200,
       id: userId,
@@ -103,9 +97,9 @@ const postUsers = async (req, res) => {
       console.log(error);
       res.status(500);
     }
-    //await ROLLBACK();
-    POOL.query("ROLLBACK");
+    await conn.rollback();
   } finally {
+    conn.release();
     return res.end();
   }
 };
