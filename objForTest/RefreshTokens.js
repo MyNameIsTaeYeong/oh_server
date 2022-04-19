@@ -1,6 +1,6 @@
 const { POOL } = require("../db");
 
-const RefreshToken = {
+const RefreshTokens = {
   createTestRefreshToken: async (userId, refreshToken) => {
     try {
       await POOL.execute(
@@ -21,4 +21,4 @@ const RefreshToken = {
   },
 };
 
-module.exports = RefreshToken;
+module.exports = RefreshTokens;

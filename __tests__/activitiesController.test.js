@@ -2,8 +2,8 @@ const app = require("../app");
 const request = require("supertest");
 const { issueAtoken } = require("../utilities");
 const Users = require("../objForTest/Users");
-const Activity = require("../objForTest/Activity");
-const RefreshToken = require("../objForTest/RefreshToken");
+const Activities = require("../objForTest/Activities");
+const RefreshTokens = require("../objForTest/RefreshTokens");
 
 let userId;
 
@@ -15,33 +15,33 @@ afterAll(Users.deleteTestUser);
 
 describe("getActivities", () => {
   afterEach(async () => {
-    await Activity.deleteTestActivity(userId);
-    await RefreshToken.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity(userId);
+    await RefreshTokens.deleteTestRefreshToken(userId);
   });
 
   test("getActivities는 accessToken을 인증한 사용자에게 activity배열을 반환해야 한다.", async () => {
     const expectedResults = [];
 
     expectedResults.push({
-      id: await Activity.createTestActivity("수면부족", userId),
+      id: await Activities.createTestActivity("수면부족", userId),
       name: "수면부족",
       userId,
     });
 
     expectedResults.push({
-      id: await Activity.createTestActivity("운동", userId),
+      id: await Activities.createTestActivity("운동", userId),
       name: "운동",
       userId,
     });
 
     expectedResults.push({
-      id: await Activity.createTestActivity("설거지", userId),
+      id: await Activities.createTestActivity("설거지", userId),
       name: "설거지",
       userId,
     });
 
     expectedResults.push({
-      id: await Activity.createTestActivity("독서", userId),
+      id: await Activities.createTestActivity("독서", userId),
       name: "독서",
       userId,
     });
@@ -61,13 +61,13 @@ describe("getActivities", () => {
     const expectedResults = [];
 
     expectedResults.push({
-      id: await Activity.createTestActivity("수면부족", userId),
+      id: await Activities.createTestActivity("수면부족", userId),
       name: "수면부족",
       userId,
     });
 
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshToken.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken(userId, refreshToken);
 
     const res = await request(app)
       .get(`/activities/${userId}`)
@@ -90,8 +90,8 @@ describe("getActivities", () => {
 
 describe("postActivities", () => {
   afterEach(async () => {
-    await Activity.deleteTestActivity(userId);
-    await RefreshToken.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity(userId);
+    await RefreshTokens.deleteTestRefreshToken(userId);
   });
 
   test("postActivities는 accessToken을 인증한 사용자에게 삽입된 데이터 아이디를 반환해야 한다.", async () => {
@@ -108,7 +108,7 @@ describe("postActivities", () => {
 
   test("postActivities는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshToken.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken(userId, refreshToken);
 
     const res = await request(app)
       .post("/activities")
@@ -133,12 +133,12 @@ describe("postActivities", () => {
 
 describe("deleteActivities", () => {
   afterEach(async () => {
-    await Activity.deleteTestActivity(userId);
-    await RefreshToken.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity(userId);
+    await RefreshTokens.deleteTestRefreshToken(userId);
   });
 
   test("deleteActivities는 accessToken을 인증한 사용자가 삭제하면 200코드를 반환해야 한다.", async () => {
-    const activityId = await Activity.createTestActivity("test", userId);
+    const activityId = await Activities.createTestActivity("test", userId);
     const accessToken = issueAtoken(userId, "access", "10s");
     const res = await request(app)
       .delete(`/activities/${activityId}`)
@@ -147,10 +147,10 @@ describe("deleteActivities", () => {
   });
 
   test("deleteActivities는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
-    const activityId = await Activity.createTestActivity("test", userId);
+    const activityId = await Activities.createTestActivity("test", userId);
 
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshToken.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken(userId, refreshToken);
 
     const res = await request(app)
       .delete(`/activities/${activityId}`)

@@ -1,6 +1,6 @@
 const { POOL } = require("../db");
 
-const Activity = {
+const Activities = {
   createTestActivity: async (name, userId) => {
     try {
       const results = await POOL.execute(
@@ -22,4 +22,4 @@ const Activity = {
   },
 };
 
-module.exports = Activity;
+module.exports = Activities;
