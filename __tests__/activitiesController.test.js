@@ -7,11 +7,9 @@ const RefreshTokens = require("../objForTest/RefreshTokens");
 
 let userId;
 
-beforeAll(async () => {
-  userId = await Users.createTestUser();
-});
+beforeAll(async () => (userId = await Users.createTestUser()));
 
-afterAll(Users.deleteTestUser);
+afterAll(async () => await Users.deleteTestUser());
 
 describe("getActivities", () => {
   afterEach(async () => {
