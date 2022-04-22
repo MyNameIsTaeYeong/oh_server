@@ -1,7 +1,7 @@
 const { POOL } = require("../db");
 
-const RefreshToken = {
-  createTestRefreshToken: async (userId, refreshToken) => {
+const RefreshTokens = {
+  createTestRefreshToken: async ({ userId, refreshToken }) => {
     try {
       await POOL.execute(
         `INSERT INTO RefreshTokens(userId, refreshToken) VALUES(?, ?)`,
@@ -12,13 +12,13 @@ const RefreshToken = {
     }
   },
 
-  deleteTestRefreshToken: async (uesrId) => {
+  deleteTestRefreshToken: async ({ userId }) => {
     try {
-      await POOL.execute(`DELETE FROM RefreshTokens WHERE userId=?`, [uesrId]);
+      await POOL.execute(`DELETE FROM RefreshTokens WHERE userId=?`, [userId]);
     } catch (error) {
       console.log(error);
     }
   },
 };
 
-module.exports = RefreshToken;
+module.exports = RefreshTokens;
