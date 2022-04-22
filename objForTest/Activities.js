@@ -1,7 +1,7 @@
 const { POOL } = require("../db");
 
 const Activities = {
-  createTestActivity: async (name, userId) => {
+  createTestActivity: async ({ name, userId }) => {
     try {
       const results = await POOL.execute(
         `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
@@ -13,7 +13,7 @@ const Activities = {
     }
   },
 
-  deleteTestActivity: async (userId) => {
+  deleteTestActivity: async ({ userId }) => {
     try {
       await POOL.execute(`DELETE FROM Activities WHERE userId=?`, [userId]);
     } catch (error) {

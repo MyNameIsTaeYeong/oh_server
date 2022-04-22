@@ -15,33 +15,33 @@ afterAll(Users.deleteTestUser);
 
 describe("getActivities", () => {
   afterEach(async () => {
-    await Activities.deleteTestActivity(userId);
-    await RefreshTokens.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
   });
 
   test("getActivities는 accessToken을 인증한 사용자에게 activity배열을 반환해야 한다.", async () => {
     const expectedResults = [];
 
     expectedResults.push({
-      id: await Activities.createTestActivity("수면부족", userId),
+      id: await Activities.createTestActivity({ name: "수면부족", userId }),
       name: "수면부족",
       userId,
     });
 
     expectedResults.push({
-      id: await Activities.createTestActivity("운동", userId),
+      id: await Activities.createTestActivity({ name: "운동", userId }),
       name: "운동",
       userId,
     });
 
     expectedResults.push({
-      id: await Activities.createTestActivity("설거지", userId),
+      id: await Activities.createTestActivity({ name: "설거지", userId }),
       name: "설거지",
       userId,
     });
 
     expectedResults.push({
-      id: await Activities.createTestActivity("독서", userId),
+      id: await Activities.createTestActivity({ name: "독서", userId }),
       name: "독서",
       userId,
     });
@@ -61,13 +61,13 @@ describe("getActivities", () => {
     const expectedResults = [];
 
     expectedResults.push({
-      id: await Activities.createTestActivity("수면부족", userId),
+      id: await Activities.createTestActivity({ name: "수면부족", userId }),
       name: "수면부족",
       userId,
     });
 
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshTokens.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
 
     const res = await request(app)
       .get(`/activities/${userId}`)
@@ -90,8 +90,8 @@ describe("getActivities", () => {
 
 describe("postActivities", () => {
   afterEach(async () => {
-    await Activities.deleteTestActivity(userId);
-    await RefreshTokens.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
   });
 
   test("postActivities는 accessToken을 인증한 사용자에게 삽입된 데이터 아이디를 반환해야 한다.", async () => {
@@ -108,7 +108,7 @@ describe("postActivities", () => {
 
   test("postActivities는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshTokens.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
 
     const res = await request(app)
       .post("/activities")
@@ -133,12 +133,15 @@ describe("postActivities", () => {
 
 describe("deleteActivities", () => {
   afterEach(async () => {
-    await Activities.deleteTestActivity(userId);
-    await RefreshTokens.deleteTestRefreshToken(userId);
+    await Activities.deleteTestActivity({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
   });
 
   test("deleteActivities는 accessToken을 인증한 사용자가 삭제하면 200코드를 반환해야 한다.", async () => {
-    const activityId = await Activities.createTestActivity("test", userId);
+    const activityId = await Activities.createTestActivity({
+      name: "test",
+      userId,
+    });
     const accessToken = issueAtoken(userId, "access", "10s");
     const res = await request(app)
       .delete(`/activities/${activityId}`)
@@ -147,10 +150,13 @@ describe("deleteActivities", () => {
   });
 
   test("deleteActivities는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
-    const activityId = await Activities.createTestActivity("test", userId);
+    const activityId = await Activities.createTestActivity({
+      name: "test",
+      userId,
+    });
 
     const refreshToken = issueAtoken(userId, "refresh", "60m");
-    RefreshTokens.createTestRefreshToken(userId, refreshToken);
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
 
     const res = await request(app)
       .delete(`/activities/${activityId}`)

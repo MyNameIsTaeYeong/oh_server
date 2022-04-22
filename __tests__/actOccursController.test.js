@@ -1,49 +1,57 @@
 const app = require("../app");
 const request = require("supertest");
-const POOL = require("../db");
 const { issueAtoken } = require("../utilities");
+const Users = require("../objForTest/Users");
+const ActOccurrences = require("../objForTest/ActOccurrences");
+const RefreshTokens = require("../objForTest/RefreshTokens");
 
-jest.mock("../db");
+let userId;
+
+beforeAll(async () => {
+  userId = await Users.createTestUser();
+});
+
+afterAll(Users.deleteTestUser);
 
 describe("getActOccurs", () => {
+  afterEach(async () => {
+    await ActOccurrences.deleteTestActOccurs({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
+  });
+
   test("getActOccurs는 accessToken을 인증한 사용자에게 ActOccur배열을 반환해야 한다.", async () => {
-    POOL.execute.mockReturnValue([
-      [
-        {
-          id: 1,
-          activityName: "운동",
-          date: "2021-12-29T08:41:47.000Z",
-          userId: 1,
-        },
-        {
-          id: 2,
-          activityName: "설거지",
-          date: "2021-12-29T08:42:26.000Z",
-          userId: 1,
-        },
-      ],
-    ]);
-    const accessToken = issueAtoken(1, "access", "10s");
+    const expectedResults = [];
+
+    expectedResults.push({
+      id: await ActOccurrences.createTestActOccurs({
+        activityName: "운동",
+        date: "2022-04-12 12:42:34",
+        userId,
+      }),
+      activityName: "운동",
+      date: "2022-04-12 12:42:34",
+      userId,
+    });
+
+    expectedResults.push({
+      id: await ActOccurrences.createTestActOccurs({
+        activityName: "운동",
+        date: "2022-04-13 10:02:34",
+        userId,
+      }),
+      activityName: "운동",
+      date: "2022-04-13 10:02:34",
+      userId,
+    });
+
+    const accessToken = issueAtoken(userId, "access", "10s");
     const res = await request(app)
-      .get("/actoccurrences/1")
+      .get(`/actoccurrences/${userId}`)
       .set("authorization", accessToken);
 
     expect(res.body).toStrictEqual({
       code: 200,
-      results: [
-        {
-          id: 1,
-          activityName: "운동",
-          date: "2021-12-29T08:41:47.000Z",
-          userId: 1,
-        },
-        {
-          id: 2,
-          activityName: "설거지",
-          date: "2021-12-29T08:42:26.000Z",
-          userId: 1,
-        },
-      ],
+      results: expectedResults,
     });
   });
 
