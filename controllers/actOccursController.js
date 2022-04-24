@@ -4,7 +4,8 @@ const getActOccurs = async (req, res) => {
   try {
     const results = await POOL.execute(
       `SELECT id, activityName, DATE_FORMAT(date, '%y-%m-%d') as date, userId, recordId  
-      FROM ActOccurrences WHERE userId=${req.params.id}`
+      FROM ActOccurrences WHERE userId=?`,
+      [req.params.id]
     );
     const rtn = {
       code: 200,
