@@ -2,12 +2,9 @@ const { POOL } = require("../db");
 
 const getEmoOccurs = async (req, res) => {
   try {
-    // const { QUERY, EQ } = POOL;
-    // const results = await QUERY`SELECT * FROM EmoOccurrences WHERE ${EQ({
-    //   userId: req.params.id,
-    // })}`;
     const results = await POOL.execute(
-      "SELECT * FROM EmoOccurrences WHERE userId=?",
+      `SELECT id, emotionName, DATE_FORMAT(date, '%y-%m-%d') as date, userId, recordId  
+      FROM EmoOccurrences WHERE userId=?`,
       [req.params.id]
     );
     const rtn = {
