@@ -2,10 +2,6 @@ const { POOL } = require("../db");
 
 const getEmotions = async (req, res) => {
   try {
-    // const { QUERY, EQ } = POOL;
-    // const results = await QUERY`SELECT * FROM Emotions WHERE ${EQ({
-    //   userId: req.params.id,
-    // })}`;
     const results = await POOL.execute(
       "SELECT * FROM Emotions WHERE userId=?",
       [req.params.id]
@@ -30,8 +26,6 @@ const getEmotions = async (req, res) => {
 
 const postEmotions = async (req, res) => {
   try {
-    // const { QUERY, VALUES } = POOL;
-    // const results = await QUERY`INSERT INTO Emotions ${VALUES(req.body)}`;
     const { name, userId } = req.body;
     const results = await POOL.execute(
       "INSERT INTO Emotions(name, userId) VALUES(?, ?)",

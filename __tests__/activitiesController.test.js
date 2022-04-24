@@ -99,7 +99,7 @@ describe("postActivities", () => {
       .post("/activities")
       .send({ name: "달리기", userId })
       .set("authorization", accessToken);
-    console.log(res.body);
+
     expect(res.status).toBe(200);
     expect(res.body.insertId).toBeDefined();
   });

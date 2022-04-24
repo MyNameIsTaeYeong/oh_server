@@ -2,166 +2,191 @@ const app = require("../app");
 const request = require("supertest");
 const POOL = require("../db");
 const { issueAtoken } = require("../utilities");
+const Users = require("../objForTest/Users");
+const Emotions = require("../objForTest/Emotions");
+const RefreshTokens = require("../objForTest/RefreshTokens");
 
-jest.mock("../db");
+let userId;
+
+beforeAll(async () => (userId = await Users.createTestUser()));
+
+afterAll(async () => await Users.deleteTestUser());
 
 describe("getEmotions", () => {
-  test("getEmotions는 accessToken을 인증한 사용자에게 Emotion배열을 반환해야 한다.", async () => {
-    POOL.execute.mockReturnValue([
-      [
-        { id: 1, name: "기쁨", userId: 1 },
-        { id: 2, name: "슬픔", userId: 1 },
-        { id: 3, name: "분노", userId: 1 },
-      ],
-    ]);
+  afterEach(async () => {
+    await Emotions.deleteTestEmotion({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
+  });
 
-    const accessToken = issueAtoken(1, "access", "10s");
+  test("getEmotions는 accessToken을 인증한 사용자에게 Emotion배열을 반환해야 한다.", async () => {
+    const expectedResults = [];
+
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "기쁨", userId }),
+      name: "기쁨",
+      userId,
+    });
+
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "슬픔", userId }),
+      name: "슬픔",
+      userId,
+    });
+
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "화남", userId }),
+      name: "화남",
+      userId,
+    });
+
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "짜증", userId }),
+      name: "짜증",
+      userId,
+    });
+
+    const accessToken = issueAtoken(userId, "access", "10s");
 
     const res = await request(app)
-      .get("/emotions/1")
+      .get(`/emotions/${userId}`)
       .set("authorization", accessToken);
 
     expect(res.body.accessToken).toBeUndefined();
     expect(res.body).toStrictEqual({
       code: 200,
-      results: [
-        { id: 1, name: "기쁨", userId: 1 },
-        { id: 2, name: "슬픔", userId: 1 },
-        { id: 3, name: "분노", userId: 1 },
-      ],
+      results: expectedResults,
     });
   });
 
-  // test("getEmotions는 refreshToken을 인증한 사용자에게 accessToken과 Emotion배열을 반환해야 한다.", async () => {
-  //   POOL.QUERY.mockReturnValue([
-  //     { id: 1, name: "기쁨", userId: 1 },
-  //     { id: 2, name: "슬픔", userId: 1 },
-  //     { id: 3, name: "분노", userId: 1 },
-  //   ]);
+  test("getEmotions는 refreshToken을 인증한 사용자에게 accessToken과 Emotion배열을 반환해야 한다.", async () => {
+    const expectedResults = [];
 
-  //   const refreshToken = issueAtoken(1, "refresh", "10s");
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "기쁨", userId }),
+      name: "기쁨",
+      userId,
+    });
 
-  //   const res = await request(app)
-  //     .get("/emotions/1")
-  //     .set("authorization", refreshToken);
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "슬픔", userId }),
+      name: "슬픔",
+      userId,
+    });
 
-  //   expect(res.body.code).toBe(200);
-  //   expect(res.body.results).toStrictEqual([
-  //     { id: 1, name: "기쁨", userId: 1 },
-  //     { id: 2, name: "슬픔", userId: 1 },
-  //     { id: 3, name: "분노", userId: 1 },
-  //   ]);
-  //   expect(res.body.accessToken).toBeDefined();
-  // });
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "화남", userId }),
+      name: "화남",
+      userId,
+    });
+
+    expectedResults.push({
+      id: await Emotions.createTestEmotion({ name: "짜증", userId }),
+      name: "짜증",
+      userId,
+    });
+
+    const refreshToken = issueAtoken(userId, "refresh", "10s");
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
+
+    const res = await request(app)
+      .get(`/emotions/${userId}`)
+      .set("authorization", refreshToken);
+
+    expect(res.body.code).toBe(200);
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.results).toStrictEqual(expectedResults);
+  });
 
   test("getEmotions는 만료된 토큰을 받으면 403코드를 반환해야 한다.", async () => {
-    const accessToken = issueAtoken(1, "access", "0s");
+    const accessToken = issueAtoken(userId, "access", "0s");
 
     const res = await request(app)
-      .get("/emotions/1")
+      .get(`/emotions/${userId}`)
       .set("authorization", accessToken);
     expect(res.body.code).toBe(403);
-  });
-
-  test("getEmotions는 데이터조회가 실패하면 500코드를 반환해야 한다.", async () => {
-    POOL.execute.mockImplementation(() => {
-      throw new Error("에러발생");
-    });
-    const accessToken = issueAtoken(1, "access", "10s");
-    const res = await request(app)
-      .get("/emotions/1")
-      .set("authorization", accessToken);
-    expect(res.statusCode).toBe(500);
   });
 });
 
 describe("postEmotions", () => {
-  test("postEmotions는 accessToken을 인증한 사용자에게 삽입된 데이터 아이디를 반환해야 한다.", async () => {
-    POOL.execute.mockReturnValue([{ insertId: 10 }]);
-    const accessToken = issueAtoken(1, "access", "10s");
-    const res = await request(app)
-      .post("/emotions")
-      .send({ name: "ㅁㅁㅁㅁ", userId: 1 })
-      .set("authorization", accessToken);
-
-    expect(res.body).toStrictEqual({
-      code: 200,
-      insertId: 10,
-    });
+  afterEach(async () => {
+    await Emotions.deleteTestEmotion({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
   });
 
-  // test("postEmotions는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
-  //   POOL.QUERY.mockReturnValue({ insertId: 10 });
-  //   const refreshToken = issueAtoken(1, "refresh", "10s");
-  //   const res = await request(app)
-  //     .post("/emotions")
-  //     .send({ name: "ㅁㅁㅁㅁ", userId: 1 })
-  //     .set("authorization", refreshToken);
-  //   expect(res.body.accessToken).toBeDefined();
-  //   expect(res.status).toBe(200);
-  //   expect(res.body.insertId).toBe(10);
-  // });
+  test("postEmotions는 accessToken을 인증한 사용자에게 삽입된 데이터 아이디를 반환해야 한다.", async () => {
+    const accessToken = issueAtoken(userId, "access", "10s");
+    const res = await request(app)
+      .post("/emotions")
+      .send({ name: "기쁨", userId })
+      .set("authorization", accessToken);
+
+    expect(res.status).toBe(200);
+    expect(res.body.insertId).toBeDefined();
+  });
+
+  test("postEmotions는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
+    const refreshToken = issueAtoken(userId, "refresh", "10s");
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
+    const res = await request(app)
+      .post("/emotions")
+      .send({ name: "기쁨", userId })
+      .set("authorization", refreshToken);
+
+    expect(res.status).toBe(200);
+    expect(res.body.insertId).toBeDefined();
+    expect(res.body.accessToken).toBeDefined();
+  });
 
   test("postEmotions는 만료된 토큰을 받으면 403코드를 반환해야 한다.", async () => {
-    const accessToken = issueAtoken(1, "access", "0s");
+    const accessToken = issueAtoken(userId, "access", "0s");
 
     const res = await request(app)
       .post("/emotions")
-      .send({ name: "ㅁㅁㅁㅁ", userId: 1 })
+      .send({ name: "기쁨", userId: 1 })
       .set("authorization", accessToken);
     expect(res.body.code).toBe(403);
-    expect(res.body.accessToken).toBeUndefined();
-  });
-
-  test("postEmotions는 데이터삽입에 실패하면 500코드를 반환해야 한다.", async () => {
-    POOL.execute.mockImplementation(() => {
-      throw new Error("에러발생");
-    });
-    const accessToken = issueAtoken(1, "access", "10s");
-    const res = await request(app)
-      .post("/emotions")
-      .send({ name: "ㅁㅁㅁㅁ", userId: 1 })
-      .set("authorization", accessToken);
-    expect(res.statusCode).toBe(500);
   });
 });
 
 describe("deleteEmotions", () => {
+  afterEach(async () => {
+    await Emotions.deleteTestEmotion({ userId });
+    await RefreshTokens.deleteTestRefreshToken({ userId });
+  });
+
   test("deleteEmotions는 accessToken을 인증한 사용자가 삭제하면 200코드를 반환해야 한다.", async () => {
-    POOL.execute.mockReturnValue();
-    const accessToken = issueAtoken(1, "access", "10s");
+    const emotionId = await Emotions.createTestEmotion({
+      name: "test",
+      userId,
+    });
+    const accessToken = issueAtoken(userId, "access", "10s");
     const res = await request(app)
-      .delete("/emotions/1")
+      .delete(`/emotions/${emotionId}`)
       .set("authorization", accessToken);
     expect(res.status).toBe(200);
   });
 
-  // test("deleteEmotions는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
-  //   POOL.QUERY.mockReturnValue();
-  //   const refreshToken = issueAtoken(1, "refresh", "10s");
-  //   const res = await request(app)
-  //     .delete("/emotions/1")
-  //     .set("authorization", refreshToken);
-  //   expect(res.status).toBe(200);
-  //   expect(res.body.accessToken).toBeDefined();
-  // });
+  test("deleteEmotions는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
+    const emotionId = await Emotions.createTestEmotion({
+      name: "test",
+      userId,
+    });
+
+    const refreshToken = issueAtoken(userId, "refresh", "10s");
+    RefreshTokens.createTestRefreshToken({ userId, refreshToken });
+
+    const res = await request(app)
+      .delete(`/emotions/${emotionId}`)
+      .set("authorization", refreshToken);
+    expect(res.status).toBe(200);
+    expect(res.body.accessToken).toBeDefined();
+  });
 
   test("deleteEmotions는 만료된 토큰을 받으면 403코드를 반환해야 한다.", async () => {
-    const accessToken = issueAtoken(1, "access", "0s");
+    const accessToken = issueAtoken(userId, "access", "0s");
     const res = await request(app)
       .delete("/emotions/1")
       .set("authorization", accessToken);
     expect(res.body.code).toBe(403);
-  });
-
-  test("deleteEmotions는 삭제에 실피하면 500코드를 반환해야 한다.", async () => {
-    POOL.execute.mockImplementation(() => {
-      throw new Error();
-    });
-    const accessToken = issueAtoken(1, "access", "10s");
-    const res = await request(app)
-      .delete("/emotions/1")
-      .set("authorization", accessToken);
-    expect(res.status).toBe(500);
   });
 });
