@@ -1,10 +1,10 @@
 # oh_server
 
-# E-R Diagram
+# 📌 E-R Diagram
 
 ![E-R Diagram](https://github.com/MyNameIsTaeYeong/oh_server/blob/main/ERdiagram.png)
 
-# Table
+# 📌 Table
 
 ```
 CREATE TABLE Users (
@@ -78,6 +78,6 @@ CREATE TABLE Likes (
 );
 ```
 
-# API
+# 📌 [API](https://documenter.getpostman.com/view/5013120/UyrGAtod)
 
-[Documentation](https://documenter.getpostman.com/view/5013120/UyrGAtod)
+# 📌 [프로젝트 과정](https://velog.io/@imtaebari/series/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
