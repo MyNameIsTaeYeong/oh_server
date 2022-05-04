@@ -106,7 +106,7 @@ CREATE TABLE Likes (
   - mysql FOR UPDATE를 이용하여 트랜잭션동안 행의 읽기연산 대기.
   - jmeter를 통한 기능 검증.
 - 기존에 저장소 mock 테스트를 실제 저장소 test로 변환.
-- 서버의 응답속도 향상, 데이터 베이스의 부하 감소를 위해 redis 캐시 서버 도입.
+- 서버의 응답속도 향상, 데이터 베이스의 부하 감소를 위해 redis 캐시 서버 추가.
   - 캐싱 전략
     - 변경에 크게 영향받지 않는 데이터 : lazyLoading, 데이터 일관성을 개선하기 위해 캐시 데이터에 TTL 설정.
-    - 일관성이 중요한 데이터 : write through, 캐시 메모리 관리를 위해 캐시 데이터에 TTL 설정.
+    - 일관성이 중요한 데이터 : write through, lazyLoading 캐시 메모리 관리를 위해 캐시 데이터에 TTL 설정.
