@@ -22,7 +22,7 @@ const getUsers = async (req, res) => {
       resource: "RefreshTokens",
       id: userId,
       duration: 108000,
-      refreshToken,
+      values: [{ userId, refreshToken }],
     });
 
     res.json({
@@ -93,7 +93,7 @@ const postUsers = async (req, res) => {
       resource: "RefreshTokens",
       id: userId,
       duration: 108000,
-      refreshToken,
+      values: [{ userId, refreshToken }],
     });
 
     res.json({

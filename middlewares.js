@@ -12,7 +12,11 @@ const verifyToken = async (req, res, next) => {
     );
 
     if (decoded.which === "refresh") {
-      const row = await getCache({ resource: "refreshToken", id: decoded.id });
+      const row = await getCache({
+        resource: "RefreshTokens",
+        id: decoded.id,
+        duration: 108000,
+      });
 
       if (row[0].refreshToken !== req.headers.authorization) {
         return res.status(401).json({

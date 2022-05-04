@@ -8,7 +8,7 @@ const issueAtoken = (id, which, expiresIn) => {
   return token;
 };
 
-const getCache = async ({ resource, id }) => {
+const getCache = async ({ resource, id, duration }) => {
   try {
     let customerRecord = await cache.get(`${resource}:${id}`);
 
@@ -22,7 +22,7 @@ const getCache = async ({ resource, id }) => {
     );
     customerRecord = queryResult[0];
     await cache.set(`${resource}:${id}`, JSON.stringify(customerRecord), {
-      EX: 300,
+      EX: duration ? duration : 300,
     });
     console.log("캐시 저장 완료");
     return customerRecord;
