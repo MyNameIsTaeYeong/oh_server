@@ -3,16 +3,14 @@ const { getCache } = require("../utilities");
 
 const getEmoOccurs = async (req, res) => {
   try {
-    const results = await getCache({
+    const records = await getCache({
       resource: "EmoOccurrences",
       id: req.params.id,
     });
 
-    console.log(results);
-
     const rtn = {
       code: 200,
-      results: results[0],
+      results: records,
     };
 
     if (req.newAccessToken) {
