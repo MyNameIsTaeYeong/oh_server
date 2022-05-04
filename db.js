@@ -1,4 +1,5 @@
 const mysql = require("mysql2");
+const redis = require("redis");
 const dotenv = require("dotenv");
 
 dotenv.config();
@@ -26,4 +27,19 @@ const getConnection = async () => {
   }
 };
 
-module.exports = { POOL, getConnection };
+const cache = redis.createClient({
+  url: process.env.REDIS,
+});
+
+cache.on("error", (err) => console.log("Redis Client Error", err));
+cache.on("connect", () => console.log("Redis start connection"));
+cache.on("ready", () => console.log("Redis ready!"));
+cache.on("end", () => console.log("Redis disconnected!"));
+
+const init = async () => {
+  await cache.connect();
+};
+
+init();
+
+module.exports = { cache, POOL, getConnection };

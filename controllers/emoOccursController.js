@@ -1,12 +1,15 @@
 const { POOL } = require("../db");
+const { getCache } = require("../utilities");
 
 const getEmoOccurs = async (req, res) => {
   try {
-    const results = await POOL.execute(
-      `SELECT id, emotionName, DATE_FORMAT(date, '%y-%m-%d') as date, userId, recordId  
-      FROM EmoOccurrences WHERE userId=?`,
-      [req.params.id]
-    );
+    const results = await getCache({
+      resource: "EmoOccurrences",
+      id: req.params.id,
+    });
+
+    console.log(results);
+
     const rtn = {
       code: 200,
       results: results[0],
