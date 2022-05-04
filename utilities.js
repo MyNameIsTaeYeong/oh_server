@@ -9,20 +9,37 @@ const issueAtoken = (id, which, expiresIn) => {
 };
 
 const getCache = async ({ resource, id }) => {
-  customerRecord = await cache.get(`${resource}:${id}`);
+  try {
+    let customerRecord = await cache.get(`${resource}:${id}`);
 
-  if (customerRecord) {
-    console.log("캐시 hit!");
-    return customerRecord;
-  }
-
-  customerRecord = await POOL.execute(
-    `SELECT * FROM ${resource} WHERE userId=?`,
-    [id]
-  );
-  await cache.set(`${resource}:${id}`, customerRecord, "EX", 10, () => {
+    if (customerRecord) {
+      console.log("캐시 hit!");
+      return JSON.parse(customerRecord);
+    }
+    const queryResult = await POOL.execute(
+      `SELECT * FROM ${resource} WHERE userId=?`,
+      [id]
+    );
+    customerRecord = queryResult[0];
+    await cache.set(`${resource}:${id}`, JSON.stringify(customerRecord), {
+      EX: 300,
+    });
     console.log("캐시 저장 완료");
-  });
+    return customerRecord;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-module.exports = { issueAtoken, getCache };
+const setCache = async ({ resource, id, duration, values }) => {
+  try {
+    await cache.set(`${resource}:${id}`, JSON.stringify(values), {
+      EX: duration,
+    });
+    console.log("캐시 저장 완료");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { issueAtoken, getCache, setCache };

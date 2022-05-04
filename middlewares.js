@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { POOL } = require("./db");
 const dotenv = require("dotenv");
-const { issueAtoken } = require("./utilities");
+const { issueAtoken, getCache } = require("./utilities");
 dotenv.config();
 
 const verifyToken = async (req, res, next) => {
@@ -12,12 +12,9 @@ const verifyToken = async (req, res, next) => {
     );
 
     if (decoded.which === "refresh") {
-      const row = await POOL.execute(
-        "SELECT refreshToken FROM RefreshTokens WHERE userId=?",
-        [decoded.id]
-      );
+      const row = await getCache({ resource: "refreshToken", id: decoded.id });
 
-      if (row[0][0].refreshToken !== req.headers.authorization) {
+      if (row[0].refreshToken !== req.headers.authorization) {
         return res.status(401).json({
           code: 401,
           message: "JsonWebTokenError",
