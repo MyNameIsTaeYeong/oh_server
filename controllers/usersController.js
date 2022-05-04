@@ -1,6 +1,6 @@
 const { POOL, getConnection } = require("../db");
 const dotenv = require("dotenv");
-const { issueAtoken } = require("../utilities");
+const { issueAtoken, setCache } = require("../utilities");
 
 dotenv.config();
 
@@ -17,6 +17,13 @@ const getUsers = async (req, res) => {
       `UPDATE RefreshTokens SET refreshToken=? WHERE userId=?`,
       [refreshToken, userId]
     );
+
+    await setCache({
+      resource: "RefreshTokens",
+      id: userId,
+      duration: 108000,
+      refreshToken,
+    });
 
     res.json({
       code: 200,
@@ -81,6 +88,13 @@ const postUsers = async (req, res) => {
     ]);
 
     await conn.commit();
+
+    await setCache({
+      resource: "RefreshTokens",
+      id: userId,
+      duration: 108000,
+      refreshToken,
+    });
 
     res.json({
       code: 200,

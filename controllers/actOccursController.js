@@ -1,4 +1,5 @@
 const { POOL } = require("../db");
+const { getCache } = require("../utilities");
 
 const getActOccurs = async (req, res) => {
   try {
