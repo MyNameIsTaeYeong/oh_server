@@ -4,9 +4,22 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const POOL = mysql
+const masterPOOL = mysql
   .createPool({
-    host: process.env.HOST,
+    host: process.env.MASTER,
+    user: process.env.DATABASEUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    connectionLimit: 10,
+    waitForConnections: true,
+    connectTimeout: 2000,
+    queueLimit: 0,
+  })
+  .promise();
+
+const slavePOOL = mysql
+  .createPool({
+    host: process.env.SLAVE,
     user: process.env.DATABASEUSER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
@@ -19,7 +32,7 @@ const POOL = mysql
 
 const getConnection = async () => {
   try {
-    const conn = await POOL.getConnection();
+    const conn = await masterPOOL.getConnection();
     return conn;
   } catch (error) {
     console.log(error);
@@ -42,4 +55,4 @@ const init = async () => {
 
 init();
 
-module.exports = { cache, POOL, getConnection };
+module.exports = { cache, masterPOOL, slavePOOL, getConnection };

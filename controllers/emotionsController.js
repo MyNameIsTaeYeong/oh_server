@@ -1,8 +1,8 @@
-const { POOL } = require("../db");
+const { slavePOOL, masterPOOL } = require("../db");
 
 const getEmotions = async (req, res) => {
   try {
-    const results = await POOL.execute(
+    const results = await slavePOOL.execute(
       "SELECT * FROM Emotions WHERE userId=?",
       [req.params.id]
     );
@@ -27,7 +27,7 @@ const getEmotions = async (req, res) => {
 const postEmotions = async (req, res) => {
   try {
     const { name, userId } = req.body;
-    const results = await POOL.execute(
+    const results = await masterPOOL.execute(
       "INSERT INTO Emotions(name, userId) VALUES(?, ?)",
       [name, userId]
     );
@@ -52,9 +52,9 @@ const postEmotions = async (req, res) => {
 
 const deleteEmotions = async (req, res) => {
   try {
-    // const { QUERY } = POOL;
-    // await QUERY`DELETE FROM Emotions where id=${req.params.id}`;
-    await POOL.execute("DELETE FROM Emotions where id=?", [req.params.id]);
+    await masterPOOL.execute("DELETE FROM Emotions where id=?", [
+      req.params.id,
+    ]);
     const rtn = {
       code: 200,
     };
