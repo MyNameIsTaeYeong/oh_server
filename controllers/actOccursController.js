@@ -1,4 +1,4 @@
-const { POOL } = require("../db");
+const { masterPOOL, slavePOOL } = require("../db");
 const { getCache } = require("../utilities");
 
 const getActOccurs = async (req, res) => {
@@ -29,7 +29,7 @@ const getActOccurs = async (req, res) => {
 const postActOccurs = async (req, res) => {
   try {
     const { activityName, userId, recordId } = req.body;
-    const results = await POOL.execute(
+    const results = await masterPOOL.execute(
       `INSERT INTO ActOccurrences(activityName, userId, recordId) VALUES(?, ?, ?)`,
       [activityName, userId, recordId]
     );
@@ -55,7 +55,7 @@ const postActOccurs = async (req, res) => {
 const postActAndEmo = async (req, res) => {
   try {
     const temp = await Promise.all([
-      POOL.execute(
+      slavePOOL.execute(
         `SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
             WHERE DATE_FORMAT(date, '%y-%m-%d')
             IN (SELECT DATE_FORMAT(date, '%y-%m-%d') 
@@ -66,7 +66,7 @@ const postActAndEmo = async (req, res) => {
             GROUP BY emotionName;`,
         [req.body.activityName, req.params.userId, req.params.userId]
       ),
-      POOL.execute(
+      slavePOOL.execute(
         `SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
             WHERE DATE_FORMAT(date,'%y-%m-%d') 
             IN (SELECT DATE_FORMAT(date, '%y-%m-%d')

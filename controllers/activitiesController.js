@@ -1,8 +1,8 @@
-const { POOL } = require("../db");
+const { masterPOOL, slavePOOL } = require("../db");
 
 const getActivities = async (req, res) => {
   try {
-    const results = await POOL.execute(
+    const results = await slavePOOL.execute(
       `SELECT * FROM Activities WHERE userId=?`,
       [req.params.id]
     );
@@ -27,7 +27,7 @@ const getActivities = async (req, res) => {
 const postActivities = async (req, res) => {
   try {
     const { name, userId } = req.body;
-    const results = await POOL.execute(
+    const results = await masterPOOL.execute(
       `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
       [name, userId]
     );
@@ -51,7 +51,9 @@ const postActivities = async (req, res) => {
 
 const deleteActivities = async (req, res) => {
   try {
-    await POOL.execute(`DELETE FROM Activities WHERE id=?`, [req.params.id]);
+    await masterPOOL.execute(`DELETE FROM Activities WHERE id=?`, [
+      req.params.id,
+    ]);
     const rtn = {
       code: 200,
     };
