@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const { cache, POOL } = require("./db");
+const { cache, slavePOOL } = require("./db");
 dotenv.config();
 
 const issueAtoken = (id, which, expiresIn) => {
@@ -16,7 +16,7 @@ const getCache = async ({ resource, id, duration }) => {
       console.log("캐시 hit!");
       return JSON.parse(customerRecord);
     }
-    const queryResult = await POOL.execute(
+    const queryResult = await slavePOOL.execute(
       `SELECT * FROM ${resource} WHERE userId=?`,
       [id]
     );

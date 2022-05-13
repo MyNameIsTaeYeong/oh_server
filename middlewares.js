@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { POOL } = require("./db");
 const dotenv = require("dotenv");
 const { issueAtoken, getCache } = require("./utilities");
 dotenv.config();
