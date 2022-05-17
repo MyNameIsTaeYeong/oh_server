@@ -110,3 +110,9 @@ CREATE TABLE Likes (
   - 캐싱 전략
     - 변경에 크게 영향받지 않는 데이터 : lazyLoading, 데이터 일관성을 개선하기 위해 캐시 데이터에 TTL 설정.
     - 일관성이 중요한 데이터 : write through, lazyLoading 캐시 메모리 관리를 위해 캐시 데이터에 TTL 설정.
+- 데이터 베이스의 부하 감소를 위해 aws rds를 사용하여 DB 복제
+  - master : 쓰기 요청 전담
+  - slave : 읽기 요청 전담
+- nginx 도입
+  - 부하분산을 위한 로드밸런서 역할.
+  - https 설정.
