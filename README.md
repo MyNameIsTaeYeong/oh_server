@@ -6,8 +6,9 @@
 
 [PlayStore에서 다운로드하기](https://play.google.com/store/apps/details?id=com.oh)
 
-# 📌 기술스택
+# 📌 사용기술
 
+- NodeJS
 - Express
 - MySql
 - jest
