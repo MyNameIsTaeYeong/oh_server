@@ -96,9 +96,9 @@ CREATE TABLE Likes (
 );
 ```
 
-# 📌 [API](https://documenter.getpostman.com/view/5013120/UyrGAtod)
+# 📌 API : [Link](https://documenter.getpostman.com/view/5013120/UyrGAtod)
 
-# 📌 [프로젝트 과정](https://velog.io/@imtaebari/series/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
+# 📌 프로젝트 과정 : [Link](https://velog.io/@imtaebari/series/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
 
 - DB 테이블 3정규화까지 진행.
 - jwt를 사용하여 인가 구현
