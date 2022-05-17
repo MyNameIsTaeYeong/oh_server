@@ -14,7 +14,7 @@
 - jest
 - supertest
 - AWS EC2
-- AWS Elastic cache
+- AWS Elastic cache (Redis)
 - AWS RDS
 
 # 📌 아키텍처
