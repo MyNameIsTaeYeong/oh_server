@@ -10,9 +10,11 @@
 
 - Express
 - MySql
-- AWS EC2
 - jest
 - supertest
+- AWS EC2
+- AWS Elastic cache
+- AWS RDS
 
 # 📌 아키텍처
 
