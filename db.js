@@ -40,6 +40,26 @@ const getConnection = async () => {
   }
 };
 
+const readFromDB = async (query, params) => {
+  try {
+    const result = (await slavePOOL.execute(query, params))[0];
+    return result;
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
+};
+
+const writeToDB = async (query, params) => {
+  try {
+    const result = (await masterPOOL.execute(query, params))[0];
+    return result;
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
+};
+
 // const cache = redis.createClient({
 //   url: process.env.REDIS,
 // });
@@ -57,4 +77,10 @@ const getConnection = async () => {
 
 //module.exports = { cache, masterPOOL, slavePOOL, getConnection };
 
-module.exports = { masterPOOL, slavePOOL, getConnection };
+module.exports = {
+  masterPOOL,
+  slavePOOL,
+  getConnection,
+  readFromDB,
+  writeToDB,
+};

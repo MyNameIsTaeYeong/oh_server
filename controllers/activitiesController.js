@@ -1,4 +1,4 @@
-const { masterPOOL, slavePOOL } = require("../db");
+const { readFromDB, writeToDB } = require("../db");
 
 const getActivities = async (req, res) => {
   const rtn = {
@@ -54,26 +54,6 @@ const deleteActivities = async (req, res) => {
   }
 
   res.end();
-};
-
-const readFromDB = async (query, params) => {
-  try {
-    const result = (await slavePOOL.execute(query, params))[0];
-    return result;
-  } catch (error) {
-    console.log(error);
-    return "error";
-  }
-};
-
-const writeToDB = async (query, params) => {
-  try {
-    const result = (await masterPOOL.execute(query, params))[0];
-    return result;
-  } catch (error) {
-    console.log(error);
-    return "error";
-  }
 };
 
 module.exports = { getActivities, postActivities, deleteActivities };
