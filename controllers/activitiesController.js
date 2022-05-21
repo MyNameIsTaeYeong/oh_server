@@ -25,14 +25,15 @@ const getActivities = async (req, res) => {
 const postActivities = async (req, res) => {
   try {
     const { name, userId } = req.body;
-    const results = await writeToDB(
-      `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
-      [name, userId]
-    );
 
     const rtn = {
       code: 200,
-      insertId: results[0].insertId,
+      insertId: (
+        await writeToDB(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
+          name,
+          userId,
+        ])
+      ).insertId,
     };
 
     if (req.newAccessToken) {
@@ -77,7 +78,7 @@ const readFromDB = async (query, params) => {
 };
 
 const writeToDB = async (query, params) => {
-  const result = await masterPOOL.execute(query, params);
+  const result = (await masterPOOL.execute(query, params))[0];
 
   return result;
 };
