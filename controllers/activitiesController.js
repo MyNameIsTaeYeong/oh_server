@@ -36,9 +36,12 @@ const postActivities = async (req, res) => {
 };
 
 const deleteActivities = async (req, res) => {
-  try {
-    await writeToDB(`DELETE FROM Activities WHERE id=?`, [req.params.id]);
-
+  if (
+    (await writeToDB(`DELETE FROM Activities WHERE id=?`, [req.params.id])) ===
+    "error"
+  ) {
+    res.status(500);
+  } else {
     const rtn = {
       code: 200,
     };
@@ -48,12 +51,9 @@ const deleteActivities = async (req, res) => {
     }
 
     res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
   }
+
+  res.end();
 };
 
 const readFromDB = async (query, params) => {
