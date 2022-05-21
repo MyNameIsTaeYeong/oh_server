@@ -24,14 +24,12 @@ const getActivities = async (req, res) => {
 
 const postActivities = async (req, res) => {
   try {
-    const { name, userId } = req.body;
-
     const rtn = {
       code: 200,
       insertId: (
         await writeToDB(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-          name,
-          userId,
+          req.body.name,
+          req.body.userId,
         ])
       ).insertId,
     };
