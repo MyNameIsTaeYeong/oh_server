@@ -2,7 +2,8 @@ const { masterPOOL, slavePOOL } = require("../db");
 
 const getActivities = async (req, res) => {
   try {
-    const results = await slavePOOL.execute(
+    const POOL = slavePOOL;
+    const results = await POOL.execute(
       `SELECT * FROM Activities WHERE userId=?`,
       [req.params.id]
     );

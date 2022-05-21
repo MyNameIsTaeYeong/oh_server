@@ -11,7 +11,7 @@ beforeAll(async () => (userId = await Users.createTestUser()));
 
 afterAll(async () => await Users.deleteTestUser());
 
-describe("getActivities", () => {
+describe.only("getActivities", () => {
   afterEach(async () => {
     await Activities.deleteTestActivity({ userId });
     await RefreshTokens.deleteTestRefreshToken({ userId });
@@ -55,7 +55,7 @@ describe("getActivities", () => {
     });
   });
 
-  test("getActivities는 refreshToken을 인증한 사용자에게 accessToken과 activity배열을 반환해야 한다.", async () => {
+  test.skip("getActivities는 refreshToken을 인증한 사용자에게 accessToken과 activity배열을 반환해야 한다.", async () => {
     const expectedResults = [];
 
     expectedResults.push({

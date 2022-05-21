@@ -40,19 +40,21 @@ const getConnection = async () => {
   }
 };
 
-const cache = redis.createClient({
-  url: process.env.REDIS,
-});
+// const cache = redis.createClient({
+//   url: process.env.REDIS,
+// });
 
-cache.on("error", (err) => console.log("Redis Client Error", err));
-cache.on("connect", () => console.log("Redis start connection"));
-cache.on("ready", () => console.log("Redis ready!"));
-cache.on("end", () => console.log("Redis disconnected!"));
+// cache.on("error", (err) => console.log("Redis Client Error", err));
+// cache.on("connect", () => console.log("Redis start connection"));
+// cache.on("ready", () => console.log("Redis ready!"));
+// cache.on("end", () => console.log("Redis disconnected!"));
 
-const init = async () => {
-  await cache.connect();
-};
+// const init = async () => {
+//   await cache.connect();
+// };
 
-init();
+// init();
 
-module.exports = { cache, masterPOOL, slavePOOL, getConnection };
+//module.exports = { cache, masterPOOL, slavePOOL, getConnection };
+
+module.exports = { masterPOOL, slavePOOL, getConnection };
