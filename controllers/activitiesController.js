@@ -1,25 +1,19 @@
 const { masterPOOL, slavePOOL } = require("../db");
 
 const getActivities = async (req, res) => {
-  try {
-    const rtn = {
-      code: 200,
-      results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
-        req.params.id,
-      ]),
-    };
+  const rtn = {
+    code: 200,
+    results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
+      req.params.id,
+    ]),
+  };
 
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
+  if (req.newAccessToken) {
+    rtn.accessToken = req.newAccessToken;
   }
+
+  rtn.results === "error" ? res.status(500) : res.json(rtn);
+  res.end();
 };
 
 const postActivities = async (req, res) => {
@@ -69,9 +63,13 @@ const deleteActivities = async (req, res) => {
 };
 
 const readFromDB = async (query, params) => {
-  const result = (await slavePOOL.execute(query, params))[0];
-
-  return result;
+  try {
+    const result = (await slavePOOL.execute(query, params))[0];
+    return result;
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
 };
 
 const writeToDB = async (query, params) => {
