@@ -25,10 +25,11 @@ const getActivities = async (req, res) => {
 const postActivities = async (req, res) => {
   try {
     const { name, userId } = req.body;
-    const results = await masterPOOL.execute(
+    const results = await writeToDB(
       `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
       [name, userId]
     );
+
     const rtn = {
       code: 200,
       insertId: results[0].insertId,
@@ -71,6 +72,12 @@ const deleteActivities = async (req, res) => {
 
 const readFromDB = async (query, params) => {
   const result = (await slavePOOL.execute(query, params))[0];
+
+  return result;
+};
+
+const writeToDB = async (query, params) => {
+  const result = await masterPOOL.execute(query, params);
 
   return result;
 };
