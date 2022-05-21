@@ -1,4 +1,4 @@
-const { POOL } = require("../db");
+const { masterPOOL: POOL } = require("../db");
 
 const Users = {
   createTestUser: async () => {

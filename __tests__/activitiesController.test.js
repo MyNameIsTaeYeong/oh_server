@@ -55,7 +55,7 @@ describe("getActivities", () => {
     });
   });
 
-  test("getActivities는 refreshToken을 인증한 사용자에게 accessToken과 activity배열을 반환해야 한다.", async () => {
+  test.skip("getActivities는 refreshToken을 인증한 사용자에게 accessToken과 activity배열을 반환해야 한다.", async () => {
     const expectedResults = [];
 
     expectedResults.push({
@@ -104,7 +104,7 @@ describe("postActivities", () => {
     expect(res.body.insertId).toBeDefined();
   });
 
-  test("postActivities는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
+  test.skip("postActivities는 refreshToken을 인증한 사용자에게 accessToken과 삽입된 데이터 아이디를 반환해야 한다.", async () => {
     const refreshToken = issueAtoken(userId, "refresh", "60m");
     RefreshTokens.createTestRefreshToken({ userId, refreshToken });
 
@@ -147,7 +147,7 @@ describe("deleteActivities", () => {
     expect(res.status).toBe(200);
   });
 
-  test("deleteActivities는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
+  test.skip("deleteActivities는 refreshToken을 인증한 사용자가 삭제하면 accessToken과 200코드를 반환해야 한다.", async () => {
     const activityId = await Activities.createTestActivity({
       name: "test",
       userId,
