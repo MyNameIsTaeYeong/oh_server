@@ -17,28 +17,22 @@ const getActivities = async (req, res) => {
 };
 
 const postActivities = async (req, res) => {
-  try {
-    const rtn = {
-      code: 200,
-      insertId: (
-        await writeToDB(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-          req.body.name,
-          req.body.userId,
-        ])
-      ).insertId,
-    };
+  const rtn = {
+    code: 200,
+    insertId: (
+      await writeToDB(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
+        req.body.name,
+        req.body.userId,
+      ])
+    ).insertId,
+  };
 
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.status(200).json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
+  if (req.newAccessToken) {
+    rtn.accessToken = req.newAccessToken;
   }
+
+  rtn.insertId === "error" ? res.status(500) : res.status(200).json(rtn);
+  res.end();
 };
 
 const deleteActivities = async (req, res) => {
@@ -73,9 +67,13 @@ const readFromDB = async (query, params) => {
 };
 
 const writeToDB = async (query, params) => {
-  const result = (await masterPOOL.execute(query, params))[0];
-
-  return result;
+  try {
+    const result = (await masterPOOL.execute(query, params))[0];
+    return result;
+  } catch (error) {
+    console.log(error);
+    return "error";
+  }
 };
 
 module.exports = { getActivities, postActivities, deleteActivities };
