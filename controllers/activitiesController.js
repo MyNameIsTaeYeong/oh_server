@@ -49,9 +49,8 @@ const postActivities = async (req, res) => {
 
 const deleteActivities = async (req, res) => {
   try {
-    await masterPOOL.execute(`DELETE FROM Activities WHERE id=?`, [
-      req.params.id,
-    ]);
+    await writeToDB(`DELETE FROM Activities WHERE id=?`, [req.params.id]);
+
     const rtn = {
       code: 200,
     };
