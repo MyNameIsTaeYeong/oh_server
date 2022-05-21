@@ -3,10 +3,10 @@ const { masterPOOL, slavePOOL } = require("../db");
 const getActivities = async (req, res) => {
   try {
     const POOL = slavePOOL;
-    const results = await POOL.execute(
-      `SELECT * FROM Activities WHERE userId=?`,
-      [req.params.id]
-    );
+    const results = await queryToDB(`SELECT * FROM Activities WHERE userId=?`, [
+      req.params.id,
+    ]);
+
     const rtn = {
       code: 200,
       results: results[0],
@@ -70,6 +70,12 @@ const deleteActivities = async (req, res) => {
   } finally {
     return res.end();
   }
+};
+
+const queryToDB = async (query, params) => {
+  const result = await slavePOOL.execute(query, params);
+
+  return result;
 };
 
 module.exports = { getActivities, postActivities, deleteActivities };
