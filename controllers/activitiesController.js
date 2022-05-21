@@ -2,14 +2,11 @@ const { masterPOOL, slavePOOL } = require("../db");
 
 const getActivities = async (req, res) => {
   try {
-    const POOL = slavePOOL;
-    const results = await queryToDB(`SELECT * FROM Activities WHERE userId=?`, [
-      req.params.id,
-    ]);
-
     const rtn = {
       code: 200,
-      results: results[0],
+      results: await queryToDB(`SELECT * FROM Activities WHERE userId=?`, [
+        req.params.id,
+      ]),
     };
 
     if (req.newAccessToken) {
@@ -73,7 +70,7 @@ const deleteActivities = async (req, res) => {
 };
 
 const queryToDB = async (query, params) => {
-  const result = await slavePOOL.execute(query, params);
+  const result = (await slavePOOL.execute(query, params))[0];
 
   return result;
 };
