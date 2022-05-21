@@ -4,7 +4,7 @@ const getActivities = async (req, res) => {
   try {
     const rtn = {
       code: 200,
-      results: await queryToDB(`SELECT * FROM Activities WHERE userId=?`, [
+      results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
         req.params.id,
       ]),
     };
@@ -69,7 +69,7 @@ const deleteActivities = async (req, res) => {
   }
 };
 
-const queryToDB = async (query, params) => {
+const readFromDB = async (query, params) => {
   const result = (await slavePOOL.execute(query, params))[0];
 
   return result;
