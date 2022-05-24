@@ -1,10 +1,19 @@
 class Activity {
+  #id;
   #name;
   #userId;
 
   constructor(name, userId) {
     this.#name = name;
     this.#userId = userId;
+  }
+
+  set id(id) {
+    this.#id = id;
+  }
+
+  get id() {
+    return this.#id;
   }
 
   set name(name) {
