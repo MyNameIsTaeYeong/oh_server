@@ -11,6 +11,14 @@ class UserRepository {
   findByEmail() {
     throw new Error("서브클래스에서 정의되어야 합니다.");
   }
+
+  findById() {
+    throw new Error("서브클래스에서 정의되어야 합니다.");
+  }
+
+  findAll() {
+    throw new Error("서브클래스에서 정의되어야 합니다.");
+  }
 }
 
 module.exports = UserRepository;

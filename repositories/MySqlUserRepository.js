@@ -27,6 +27,20 @@ class MySqlUserRepository extends UserRepository {
       ])
     )[0][0];
   }
+
+  async findById(user) {
+    return (
+      await this.#POOL.execute(`SELECT * FROM Users WHERE id=?`, [user.id])
+    )[0][0];
+  }
+
+  async findAll() {
+    return (await this.#POOL.execute(`SELECT * FROM Users`))[0];
+  }
+
+  async clear() {
+    await this.#POOL.execute(`DELETE FROM Users`);
+  }
 }
 
 module.exports = MySqlUserRepository;
