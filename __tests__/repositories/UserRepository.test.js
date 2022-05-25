@@ -12,5 +12,7 @@ test("UserRepository의 remove()는 서브클래스에서 정의되어야 한다
 
 test("UserRepository의 find()는 서브클래스에서 정의되어야 한다.", () => {
   const userRepo = new UserRepository();
-  expect(() => userRepo.find()).toThrow("서브클래스에서 정의되어야 합니다.");
+  expect(() => userRepo.findByEmail()).toThrow(
+    "서브클래스에서 정의되어야 합니다."
+  );
 });
