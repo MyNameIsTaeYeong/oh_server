@@ -1,6 +1,6 @@
-const ActivityRepository = require("./ActivityRepository");
+const RecordRepository = require("./RecordRepository");
 
-class MySqlActivityRepository extends ActivityRepository {
+class MySqlActivityRepository extends RecordRepository {
   #POOL;
 
   constructor(POOL) {
