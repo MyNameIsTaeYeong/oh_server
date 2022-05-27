@@ -59,7 +59,7 @@ test("MySqlActivityOccurRepository의 findByUserId()는 유저의 모든 기록�
   actOccur2.name = activity.name;
   actOccur2.userId = user.id;
   actOccur2.recordId = activity.id;
-  actOccur2.id = await mySqlActOccurRepository.save(actOccur);
+  actOccur2.id = await mySqlActOccurRepository.save(actOccur2);
 
   const expected = await mySqlActOccurRepository.findByUserId(user);
   expect(expected.length).toBe(2);
@@ -75,7 +75,7 @@ test("MySqlActivityOccurRepository의 findByRecordId()는 해당 활동의 기�
   actOccur2.name = activity.name;
   actOccur2.userId = user.id;
   actOccur2.recordId = activity.id;
-  actOccur2.id = await mySqlActOccurRepository.save(actOccur);
+  actOccur2.id = await mySqlActOccurRepository.save(actOccur2);
 
   const expected = await mySqlActOccurRepository.findByRecordId(activity);
 
