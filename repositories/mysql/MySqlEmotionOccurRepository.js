@@ -1,4 +1,4 @@
-const RecordOccurRepository = require("./RecordOccurRepository");
+const RecordOccurRepository = require("../RecordOccurRepository");
 
 class MySqlEmotionOccurRepository extends RecordOccurRepository {
   #POOL;

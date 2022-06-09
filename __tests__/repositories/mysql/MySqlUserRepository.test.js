@@ -1,5 +1,5 @@
-const { masterPOOL: POOL } = require("../../db");
-const MySqlUserRepository = require("../../repositories/MySqlUserRepository");
+const { masterPOOL: POOL } = require("../../../db");
+const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
 
 const mySqlUserRepository = new MySqlUserRepository(POOL);
 

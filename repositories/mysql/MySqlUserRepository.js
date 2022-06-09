@@ -1,4 +1,4 @@
-const UserRepository = require("./UserRepository");
+const UserRepository = require("../UserRepository");
 
 class MySqlUserRepository extends UserRepository {
   #POOL;

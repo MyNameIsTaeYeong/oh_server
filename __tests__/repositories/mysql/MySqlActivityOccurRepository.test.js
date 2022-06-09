@@ -1,10 +1,10 @@
-const { masterPOOL: POOL } = require("../../db");
-const Activity = require("../../domains/Activity");
-const ActOccur = require("../../domains/ActOccur");
-const User = require("../../domains/User");
-const MySqlActivityOccurRepository = require("../../repositories/MySqlActivityOccurRepository");
-const MySqlActivityRepository = require("../../repositories/MySqlActivityRepository");
-const MySqlUserRepository = require("../../repositories/MySqlUserRepository");
+const { masterPOOL: POOL } = require("../../../db");
+const Activity = require("../../../domains/Activity");
+const ActOccur = require("../../../domains/ActOccur");
+const User = require("../../../domains/User");
+const MySqlActivityOccurRepository = require("../../../repositories/mysql/MySqlActivityOccurRepository");
+const MySqlActivityRepository = require("../../../repositories/mysql/MySqlActivityRepository");
+const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
 
 let user;
 let activity;

@@ -1,11 +1,11 @@
-const { masterPOOL: POOL } = require("../../db");
-const EmoOccur = require("../../domains/EmoOccur");
-const Emotion = require("../../domains/Emotion");
-const User = require("../../domains/User");
-const MySqlEmotionOccurRepository = require("../../repositories/MySqlEmotionOccurRepository");
-const MySqlEmotionRepository = require("../../repositories/MySqlEmotionRepository");
+const { masterPOOL: POOL } = require("../../../db");
+const EmoOccur = require("../../../domains/EmoOccur");
+const Emotion = require("../../../domains/Emotion");
+const User = require("../../../domains/User");
+const MySqlEmotionOccurRepository = require("../../../repositories/mysql/MySqlEmotionOccurRepository");
+const MySqlEmotionRepository = require("../../../repositories/mysql/MySqlEmotionRepository");
 
-const MySqlUserRepository = require("../../repositories/MySqlUserRepository");
+const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
 
 let user;
 let emotion;
