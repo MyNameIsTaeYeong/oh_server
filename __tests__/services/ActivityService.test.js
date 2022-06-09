@@ -1,8 +1,8 @@
 const { masterPOOL: POOL } = require("../../db");
 const Activity = require("../../domains/Activity");
 const User = require("../../domains/User");
-const MySqlActivityRepository = require("../../repositories/MySqlActivityRepository");
-const MySqlUserRepository = require("../../repositories/MySqlUserRepository");
+const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
+const MySqlUserRepository = require("../../repositories/mysql/MySqlUserRepository");
 const ActivityService = require("../../services/ActivityService");
 
 let user;
@@ -36,4 +36,19 @@ test("ActivityService의 deleteActivity는 유저의 활동을 삭제한다.", a
   await activityService.deleteActivity(activity);
   const expected = await activityRepository.findById(activity);
   expect(expected).toBeUndefined();
+});
+
+test("ActivityService의 selectActivities는 활동들을 반환한다.", async () => {
+  const activity = new Activity("운동", user.id);
+  activity.id = await activityService.createActivity(activity);
+
+  const activity2 = new Activity("운동2", user.id);
+  activity2.id = await activityService.createActivity(activity2);
+
+  const activities = await activityService.selectActivities(user);
+
+  expect(activities).toStrictEqual([
+    { id: activity.id, name: "운동", userId: user.id },
+    { id: activity2.id, name: "운동2", userId: user.id },
+  ]);
 });
