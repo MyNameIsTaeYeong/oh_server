@@ -51,6 +51,13 @@ class MySqlActivityOccurRepository extends RecordOccurRepository {
   async clear() {
     await this.#POOL.execute(`DELETE FROM ActOccurrences`);
   }
+
+  async saveForTest({ activityName, userId, recordId, date }) {
+    await this.#POOL.execute(
+      `INSERT INTO ActOccurrences(activityName, userId, recordId, date) VALUES(?, ?, ?, ?)`,
+      [activityName, userId, recordId, date]
+    );
+  }
 }
 
 module.exports = MySqlActivityOccurRepository;

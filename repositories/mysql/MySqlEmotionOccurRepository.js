@@ -39,17 +39,24 @@ class MySqlEmotionOccurRepository extends RecordOccurRepository {
     )[0];
   }
 
-  async findByRecordId(activity) {
+  async findByRecordId(emotion) {
     return (
       await this.#POOL.execute(
         `SELECT * FROM EmoOccurrences WHERE recordId=?`,
-        [activity.id]
+        [emotion.id]
       )
     )[0];
   }
 
   async clear() {
     await this.#POOL.execute(`DELETE FROM EmoOccurrences`);
+  }
+
+  async saveForTest({ emotionName, userId, recordId, date }) {
+    await this.#POOL.execute(
+      `INSERT INTO EmoOccurrences(emotionName, userId, recordId, date) VALUES(?, ?, ?, ?)`,
+      [emotionName, userId, recordId, date]
+    );
   }
 }
 
