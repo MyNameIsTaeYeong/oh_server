@@ -1,24 +1,16 @@
-const { masterPOOL: POOL } = require("../../db");
 const Activity = require("../../domains/Activity");
 const Emotion = require("../../domains/Emotion");
 const User = require("../../domains/User");
-const MySqlActivityOccurRepository = require("../../repositories/mysql/MySqlActivityOccurRepository");
-const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
-const MySqlEmotionOccurRepository = require("../../repositories/mysql/MySqlEmotionOccurRepository");
-const MySqlEmotionRepository = require("../../repositories/mysql/MySqlEmotionRepository");
-const MySqlUserRepository = require("../../repositories/mysql/MySqlUserRepository");
-const ActOccurService = require("../../services/ActOccurService");
+require("../../container");
+const Container = require("typedi").Container;
 
 let user;
-const mySqlUserRepository = new MySqlUserRepository(POOL);
-const emotionRepository = new MySqlEmotionRepository(POOL);
-const activityRepository = new MySqlActivityRepository(POOL);
-const emoOccurRepository = new MySqlEmotionOccurRepository(POOL);
-const actOccurRepository = new MySqlActivityOccurRepository(POOL);
-const actOccurService = new ActOccurService(
-  actOccurRepository,
-  emoOccurRepository
-);
+const mySqlUserRepository = Container.get("UserRepository");
+const emotionRepository = Container.get("EmotionRepository");
+const activityRepository = Container.get("ActivityRepository");
+const emoOccurRepository = Container.get("EmotionOccurRepository");
+const actOccurRepository = Container.get("ActivityOccurRepository");
+const actOccurService = Container.get("ActOccurService");
 
 beforeAll(async () => {
   user = new User("test");
