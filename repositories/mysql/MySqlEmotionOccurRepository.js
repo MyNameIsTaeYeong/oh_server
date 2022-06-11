@@ -3,9 +3,9 @@ const RecordOccurRepository = require("../RecordOccurRepository");
 class MySqlEmotionOccurRepository extends RecordOccurRepository {
   #POOL;
 
-  constructor(POOL) {
+  constructor(container) {
     super();
-    this.#POOL = POOL;
+    this.#POOL = container.get("POOL");
   }
 
   async save(emoOccur) {

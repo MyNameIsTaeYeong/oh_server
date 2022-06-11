@@ -1,8 +1,8 @@
 class ActivityService {
   #activityRepository;
 
-  constructor(activityRepository) {
-    this.#activityRepository = activityRepository;
+  constructor(container) {
+    this.#activityRepository = container.get("ActivityRepository");
   }
 
   async createActivity(activity) {

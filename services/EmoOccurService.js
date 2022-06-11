@@ -2,9 +2,9 @@ class EmoOccurService {
   #emoOccurRepository;
   #actOccurRepository;
 
-  constructor(emoOccurRepository, actOccurRepository) {
-    this.#emoOccurRepository = emoOccurRepository;
-    this.#actOccurRepository = actOccurRepository;
+  constructor(container) {
+    this.#emoOccurRepository = container.get("EmotionOccurRepository");
+    this.#actOccurRepository = container.get("ActivityOccurRepository");
   }
 
   async createEmoOccur(emoOccur) {

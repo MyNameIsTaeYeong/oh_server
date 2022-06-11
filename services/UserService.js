@@ -1,8 +1,8 @@
 class UserService {
   #userRepository;
 
-  constructor(userRepository) {
-    this.#userRepository = userRepository;
+  constructor(container) {
+    this.#userRepository = container.get("UserRepository");
   }
 
   async join(user) {

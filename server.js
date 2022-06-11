@@ -1,5 +1,6 @@
 const app = require("./app");
 require("./db");
+require("./container");
 const dotenv = require("dotenv");
 
 dotenv.config();

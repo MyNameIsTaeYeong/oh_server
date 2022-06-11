@@ -1,17 +1,14 @@
-const { masterPOOL: POOL } = require("../../../db");
 const EmoOccur = require("../../../domains/EmoOccur");
 const Emotion = require("../../../domains/Emotion");
 const User = require("../../../domains/User");
-const MySqlEmotionOccurRepository = require("../../../repositories/mysql/MySqlEmotionOccurRepository");
-const MySqlEmotionRepository = require("../../../repositories/mysql/MySqlEmotionRepository");
-
-const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
+require("../../../container");
+const Container = require("typedi").Container;
 
 let user;
 let emotion;
-const mySqlUserRepository = new MySqlUserRepository(POOL);
-const mySqlEmotionRepository = new MySqlEmotionRepository(POOL);
-const mySqlEmoOccurRepository = new MySqlEmotionOccurRepository(POOL);
+const mySqlUserRepository = Container.get("UserRepository");
+const mySqlEmotionRepository = Container.get("EmotionRepository");
+const mySqlEmoOccurRepository = Container.get("EmotionOccurRepository");
 
 beforeAll(async () => {
   user = new User("test");

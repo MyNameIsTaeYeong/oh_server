@@ -1,8 +1,8 @@
 class EmotionService {
   #emotionRepository;
 
-  constructor(emotionRepository) {
-    this.#emotionRepository = emotionRepository;
+  constructor(container) {
+    this.#emotionRepository = container.get("EmotionRepository");
   }
 
   async createEmotion(emotion) {
