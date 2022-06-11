@@ -1,7 +1,7 @@
-const { masterPOOL: POOL } = require("../../../db");
-const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
+require("../../../container");
+const Container = require("typedi").Container;
 
-const mySqlUserRepository = new MySqlUserRepository(POOL);
+const mySqlUserRepository = Container.get("UserRepository");
 
 afterEach(async () => await mySqlUserRepository.clear());
 

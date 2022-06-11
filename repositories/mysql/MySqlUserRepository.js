@@ -3,9 +3,9 @@ const UserRepository = require("../UserRepository");
 class MySqlUserRepository extends UserRepository {
   #POOL;
 
-  constructor(POOL) {
+  constructor(container) {
     super();
-    this.#POOL = POOL;
+    this.#POOL = container.get("POOL");
   }
 
   async save(user) {

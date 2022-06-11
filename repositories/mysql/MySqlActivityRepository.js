@@ -3,9 +3,9 @@ const RecordRepository = require("../RecordRepository");
 class MySqlActivityRepository extends RecordRepository {
   #POOL;
 
-  constructor(POOL) {
+  constructor(container) {
     super();
-    this.#POOL = POOL;
+    this.#POOL = container.get("POOL");
   }
 
   async save(activity) {

@@ -1,16 +1,14 @@
-const { masterPOOL: POOL } = require("../../../db");
 const Activity = require("../../../domains/Activity");
 const ActOccur = require("../../../domains/ActOccur");
 const User = require("../../../domains/User");
-const MySqlActivityOccurRepository = require("../../../repositories/mysql/MySqlActivityOccurRepository");
-const MySqlActivityRepository = require("../../../repositories/mysql/MySqlActivityRepository");
-const MySqlUserRepository = require("../../../repositories/mysql/MySqlUserRepository");
+require("../../../container");
+const Container = require("typedi").Container;
 
 let user;
 let activity;
-const mySqlUserRepository = new MySqlUserRepository(POOL);
-const mySqlActivityRepository = new MySqlActivityRepository(POOL);
-const mySqlActOccurRepository = new MySqlActivityOccurRepository(POOL);
+const mySqlUserRepository = Container.get("UserRepository");
+const mySqlActivityRepository = Container.get("ActivityRepository");
+const mySqlActOccurRepository = Container.get("ActivityOccurRepository");
 
 beforeAll(async () => {
   user = new User("test");
