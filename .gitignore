@@ -125,3 +125,6 @@ dist
 package-lock.json
 
 .DS_Store
+testContainer.js
+testRepository.js
+testService.js
