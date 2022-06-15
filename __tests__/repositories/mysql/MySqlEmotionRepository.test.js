@@ -1,50 +1,196 @@
 const Emotion = require("../../../domains/Emotion");
 const User = require("../../../domains/User");
-require("../../../container");
+const ReadError = require("../../../errors/ReadError");
+const UnexpectedError = require("../../../errors/UnexpectedError");
+const WriteError = require("../../../errors/WriteError");
+const MySqlEmotionRepository = require("../../../repositories/mysql/MySqlEmotionRepository");
+
 const Container = require("typedi").Container;
 
-let user;
-const mySqlUserRepository = Container.get("UserRepository");
-const mySqlEmotionRepository = Container.get("EmotionRepository");
-
-beforeAll(async () => {
-  user = new User("test");
-  user.id = await mySqlUserRepository.save(user);
+afterEach(() => {
+  Container.remove("POOL");
 });
 
-afterAll(async () => {
-  await mySqlUserRepository.clear();
+describe("MySqlEmotionRepository의 save()", () => {
+  test("save()는 저장된 활동 아이디를 반환해야 한다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.resolve([{ insertId: 1 }]);
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(await mySqlEmotionRepository.save(new Emotion())).toBe(1);
+  });
+
+  test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.save(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 ECONNREFUSED 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.save(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 PROTOCOL_CONNECTION_LOST 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.save(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 그 외의 에러시 UnexpectedError 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "그 외" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.save(new Emotion())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });
 
-afterEach(async () => {
-  await mySqlEmotionRepository.clear();
+describe("MySqlEmotionRepository의 remove()", () => {
+  test("remove()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.remove(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 ECONNREFUSED 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.remove(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 PROTOCOL_CONNECTION_LOST 에러시 WriteError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.remove(new Emotion())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 그 외의 에러시 UnexpectedError 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "그 외" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(async () =>
+      mySqlEmotionRepository.remove(new Emotion())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });
 
-test("MySqlEmotionRepository의 save()는 활동 아이디를 반환한다.", async () => {
-  const emotion = new Emotion("기쁨", user.id);
-  emotion.id = await mySqlEmotionRepository.save(emotion);
-  const expectedId = (await mySqlEmotionRepository.findById(emotion)).id;
-  expect(expectedId).toBe(emotion.id);
-});
+describe("MySqlEmotionRepository의 findAll()", () => {
+  test("findAll()는 저장된 활동 아이디를 반환해야 한다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.resolve([[{}, {}]]);
+      },
+    });
 
-test("MySqlEmotionRepository의 findAll()은 유저의 모든 활동을 반환한다.", async () => {
-  const emotion = new Emotion("기쁨", user.id);
-  emotion.id = await mySqlEmotionRepository.save(emotion);
-  const emotion2 = new Emotion("슬픔", user.id);
-  emotion2.id = await mySqlEmotionRepository.save(emotion2);
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect((await mySqlEmotionRepository.findAll(new User())).length).toBe(2);
+  });
 
-  const emotions = await mySqlEmotionRepository.findAll(user);
+  test("save()는 ER_ACCESS_DENIED_ERROR 에러시 ReadError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
 
-  expect(emotions).toStrictEqual([
-    { id: emotion.id, name: emotion.name, userId: emotion.userId },
-    { id: emotion2.id, name: emotion2.name, userId: emotion2.userId },
-  ]);
-});
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(
+      async () => await mySqlEmotionRepository.findAll(new User())
+    ).rejects.toThrowError(ReadError);
+  });
 
-test("MySqlEmotionRepository의 remove()은 해당 활동을 삭제한다.", async () => {
-  const emotion = new Emotion("기쁨", user.id);
-  emotion.id = await mySqlEmotionRepository.save(emotion);
-  await mySqlEmotionRepository.remove(emotion);
-  const expected = await mySqlEmotionRepository.findById(emotion);
-  expect(expected).toStrictEqual(undefined);
+  test("save()는 ECONNREFUSED 에러시 ReadError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(
+      async () => await mySqlEmotionRepository.findAll(new User())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("save()는 PROTOCOL_CONNECTION_LOST 에러시 ReadError를 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(
+      async () => await mySqlEmotionRepository.findAll(new User())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("save()는 그 외의 에러시 UnexpectedError 던진다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "그 외" });
+      },
+    });
+
+    const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
+    expect(
+      async () => await mySqlEmotionRepository.findAll(new User())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });

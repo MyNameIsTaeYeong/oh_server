@@ -7,7 +7,7 @@ const WriteError = require("../../../errors/WriteError");
 const MySqlActivityOccurRepository = require("../../../repositories/mysql/MySqlActivityOccurRepository");
 const Container = require("typedi").Container;
 
-afterEach(async () => {
+afterEach(() => {
   Container.remove("POOL");
 });
 
