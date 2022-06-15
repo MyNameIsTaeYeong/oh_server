@@ -1,81 +1,268 @@
 const Activity = require("../../../domains/Activity");
 const ActOccur = require("../../../domains/ActOccur");
 const User = require("../../../domains/User");
-require("../../../container");
+const ReadError = require("../../../errors/ReadError");
+const UnexpectedError = require("../../../errors/UnexpectedError");
+const WriteError = require("../../../errors/WriteError");
+const MySqlActivityOccurRepository = require("../../../repositories/mysql/MySqlActivityOccurRepository");
 const Container = require("typedi").Container;
 
-let user;
-let activity;
-const mySqlUserRepository = Container.get("UserRepository");
-const mySqlActivityRepository = Container.get("ActivityRepository");
-const mySqlActOccurRepository = Container.get("ActivityOccurRepository");
-
-beforeAll(async () => {
-  user = new User("test");
-  user.id = await mySqlUserRepository.save(user);
-  activity = new Activity("운동", user.id);
-  activity.id = await mySqlActivityRepository.save(activity);
-});
-
-afterAll(async () => {
-  await mySqlUserRepository.clear();
-  await mySqlActivityRepository.clear();
-});
-
 afterEach(async () => {
-  await mySqlActOccurRepository.clear();
+  Container.remove("POOL");
 });
 
-test("MySqlActivityOccurRepository의 save()는 삽입된 아이디를 반환한다.", async () => {
-  const actOccur = new ActOccur();
-  actOccur.name = activity.name;
-  actOccur.userId = user.id;
-  actOccur.recordId = activity.id;
-  actOccur.id = await mySqlActOccurRepository.save(actOccur);
-  const expectedId = (await mySqlActOccurRepository.findById(actOccur)).id;
-  expect(expectedId).toBe(actOccur.id);
+describe("MySqlActivityOccurRepository의 save()", () => {
+  test("save()는 삽입된 아이디를 반환한다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.resolve([{ insertId: 1 }]);
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(await mySqlActOccurRepository.save(new ActOccur())).toBe(1);
+  });
+
+  test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.save(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 ECONNREFUSED 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.save(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 PROTOCOL_CONNECTION_LOST 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.save(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("save()는 그 외의 에러시 UnexpectedError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "unexpected" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.save(new ActOccur())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });
-test("MySqlActivityOccurRepository의 remove()는 해당 기록을 삭제한다.", async () => {
-  const actOccur = new ActOccur();
-  actOccur.name = activity.name;
-  actOccur.userId = user.id;
-  actOccur.recordId = activity.id;
-  actOccur.id = await mySqlActOccurRepository.save(actOccur);
-  await mySqlActOccurRepository.remove(actOccur);
 
-  expect(await mySqlActOccurRepository.findById(actOccur)).toBeUndefined();
+describe("MySqlActivityOccurRepository의 remove()", () => {
+  test("remove()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.remove(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 ECONNREFUSED 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.remove(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 PROTOCOL_CONNECTION_LOST 에러시 WriteError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.remove(new ActOccur())
+    ).rejects.toThrowError(WriteError);
+  });
+
+  test("remove()는 그 외의 에러시 UnexpectedError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "unexpected" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.remove(new ActOccur())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });
 
-test("MySqlActivityOccurRepository의 findByUserId()는 유저의 모든 기록을 반환한다.", async () => {
-  const actOccur = new ActOccur();
-  actOccur.name = activity.name;
-  actOccur.userId = user.id;
-  actOccur.recordId = activity.id;
-  actOccur.id = await mySqlActOccurRepository.save(actOccur);
+describe("MySqlActivityOccurRepository의 findByUserId()", () => {
+  test("findByUserId()는 유저의 모든 기록을 반환한다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.resolve([[{}, {}]]);
+      },
+    });
 
-  const actOccur2 = new ActOccur();
-  actOccur2.name = activity.name;
-  actOccur2.userId = user.id;
-  actOccur2.recordId = activity.id;
-  actOccur2.id = await mySqlActOccurRepository.save(actOccur2);
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
 
-  const expected = await mySqlActOccurRepository.findByUserId(user);
-  expect(expected.length).toBe(2);
+    const expected = await mySqlActOccurRepository.findByUserId(new User());
+    expect(expected.length).toBe(2);
+  });
+
+  test("findByUserId()는 ER_ACCESS_DENIED_ERROR 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByUserId(new User())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByUserId()는 ECONNREFUSED 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByUserId(new User())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByUserId()는 PROTOCOL_CONNECTION_LOST 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByUserId(new User())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByUserId()는 그 외의 에러시 UnexpectedError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "unexpected" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByUserId(new User())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });
-test("MySqlActivityOccurRepository의 findByRecordId()는 해당 활동의 기록을 반환한다.", async () => {
-  const actOccur = new ActOccur();
-  actOccur.name = activity.name;
-  actOccur.userId = user.id;
-  actOccur.recordId = activity.id;
-  actOccur.id = await mySqlActOccurRepository.save(actOccur);
 
-  const actOccur2 = new ActOccur();
-  actOccur2.name = activity.name;
-  actOccur2.userId = user.id;
-  actOccur2.recordId = activity.id;
-  actOccur2.id = await mySqlActOccurRepository.save(actOccur2);
+describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
+  test("findByRecordId()는 해당 활동의 기록을 반환한다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.resolve([[{}, {}]]);
+      },
+    });
 
-  const expected = await mySqlActOccurRepository.findByRecordId(activity);
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
 
-  expect(expected.length).toBe(2);
+    const expected = await mySqlActOccurRepository.findByRecordId(
+      new Activity()
+    );
+
+    expect(expected.length).toBe(2);
+  });
+
+  test("findByRecordId()는 ER_ACCESS_DENIED_ERROR 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ER_ACCESS_DENIED_ERROR" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByRecordId()는 ECONNREFUSED 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "ECONNREFUSED" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByRecordId()는 PROTOCOL_CONNECTION_LOST 에러시 ReadError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "PROTOCOL_CONNECTION_LOST" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+    ).rejects.toThrowError(ReadError);
+  });
+
+  test("findByRecordId()는 그 외의 에러시 UnexpectedError를 발생시킨다.", async () => {
+    Container.set("POOL", {
+      execute: (param1, param2) => {
+        return Promise.reject({ code: "unexpected" });
+      },
+    });
+
+    const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
+    expect(
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+    ).rejects.toThrowError(UnexpectedError);
+  });
 });

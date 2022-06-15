@@ -13,7 +13,10 @@ const UserService = require("./services/UserService");
 require("reflect-metadata");
 const Container = require("typedi").Container;
 
+// POOL
 Container.set("POOL", masterPOOL);
+
+// Repository
 Container.set(
   "ActivityOccurRepository",
   new MySqlActivityOccurRepository(Container)
@@ -25,6 +28,8 @@ Container.set(
 );
 Container.set("EmotionRepository", new MySqlEmotionRepository(Container));
 Container.set("UserRepository", new MySqlUserRepository(Container));
+
+// Service
 Container.set("ActivityService", new ActivityService(Container));
 Container.set("ActOccurService", new ActOccurService(Container));
 Container.set("EmoOccurService", new EmoOccurService(Container));
