@@ -9,15 +9,6 @@ afterEach(() => {
 });
 
 describe("ActivityService의 createActivity", () => {
-  test("activity의 id가 없으면 ArgumentError를 던진다.", async () => {
-    Container.set("ActivityRepository", {});
-    const activityService = new ActivityService(Container);
-
-    expect(
-      async () => await activityService.createActivity(new Activity())
-    ).rejects.toThrowError(ArgumentError);
-  });
-
   test("activity의 name이 없으면 ArgumentError를 던진다.", async () => {
     Container.set("ActivityRepository", {});
     const activityService = new ActivityService(Container);

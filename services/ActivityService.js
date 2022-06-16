@@ -9,7 +9,6 @@ class ActivityService {
 
   async createActivity(activity) {
     //activity id, name, userId
-    if (!activity.id) throw new ArgumentError("activity id is undefined");
     if (!activity.name) throw new ArgumentError("activity name is undefined");
     if (!activity.userId)
       throw new ArgumentError("activity userId is undefined");
