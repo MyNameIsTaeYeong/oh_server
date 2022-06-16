@@ -1,10 +1,8 @@
 class ActOccurService {
   #actOccurRepository;
-  #emoOccurRepository;
 
   constructor(container) {
     this.#actOccurRepository = container.get("ActivityOccurRepository");
-    this.#emoOccurRepository = container.get("EmotionOccurRepository");
   }
 
   async createActOccur(actOccur) {
@@ -23,15 +21,17 @@ class ActOccurService {
     return await this.#actOccurRepository.findByRecordId(activity);
   }
 
-  async selectRelatedActAndEmo(activity, user) {
+  selectRelatedActAndEmo({
+    actOccursOfActivity,
+    emoOccursOfUser,
+    actOccursOfUser,
+  }) {
     const targetDateSet = new Set(
-      (await this.#actOccurRepository.findByRecordId(activity)).map((record) =>
-        record.date.toLocaleDateString()
-      )
+      actOccursOfActivity.map((record) => record.date.toLocaleDateString())
     );
 
     return [
-      (await this.#emoOccurRepository.findByUserId(user))
+      emoOccursOfUser
         .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
         .reduce((prev, cur) => {
           prev[cur.emotionName]
@@ -40,7 +40,7 @@ class ActOccurService {
           return prev;
         }, {}),
 
-      (await this.#actOccurRepository.findByUserId(user))
+      actOccursOfUser
         .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
         .reduce((prev, cur) => {
           prev[cur.activityName]
