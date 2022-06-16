@@ -1,52 +1,87 @@
 const Activity = require("../../domains/Activity");
 const User = require("../../domains/User");
-require("../../container");
+const ArgumentError = require("../../errors/ArgumentError");
+const ActivityService = require("../../services/ActivityService");
 const Container = require("typedi").Container;
 
-let user;
-const mySqlUserRepository = Container.get("UserRepository");
-const activityRepository = Container.get("ActivityRepository");
-const activityService = Container.get("ActivityService");
-
-beforeAll(async () => {
-  user = new User("test");
-  user.id = await mySqlUserRepository.save(user);
+afterEach(() => {
+  Container.remove("ActivityRepository");
 });
 
-afterAll(async () => {
-  await mySqlUserRepository.clear();
+describe("ActivityService의 createActivity", () => {
+  test("activity의 id가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.createActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 name이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.createActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 userId가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.createActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
 });
 
-afterEach(async () => {
-  await activityRepository.clear();
+describe("ActivityService의 deleteActivity", () => {
+  test("activity의 id가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.deleteActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 name이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.deleteActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 userId가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
+
+    expect(
+      async () => await activityService.deleteActivity(new Activity())
+    ).rejects.toThrowError(ArgumentError);
+  });
 });
 
-test("ActivityService의 createActivity는 생성된 활동아이디를 반환한다.", async () => {
-  const activity = new Activity("운동", user.id);
-  activity.id = await activityService.createActivity(activity);
-  expectedId = (await activityRepository.findById(activity)).id;
-  expect(activity.id).toBe(expectedId);
-});
+describe("ActivityService의 selectActivities", () => {
+  test("user의 id가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
 
-test("ActivityService의 deleteActivity는 유저의 활동을 삭제한다.", async () => {
-  const activity = new Activity("운동", user.id);
-  activity.id = await activityService.createActivity(activity);
-  await activityService.deleteActivity(activity);
-  const expected = await activityRepository.findById(activity);
-  expect(expected).toBeUndefined();
-});
+    expect(
+      async () => await activityService.selectActivities(new User())
+    ).rejects.toThrowError(ArgumentError);
+  });
 
-test("ActivityService의 selectActivities는 활동들을 반환한다.", async () => {
-  const activity = new Activity("운동", user.id);
-  activity.id = await activityService.createActivity(activity);
+  test("user의 email이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityRepository", {});
+    const activityService = new ActivityService(Container);
 
-  const activity2 = new Activity("운동2", user.id);
-  activity2.id = await activityService.createActivity(activity2);
-
-  const activities = await activityService.selectActivities(user);
-
-  expect(activities).toStrictEqual([
-    { id: activity.id, name: "운동", userId: user.id },
-    { id: activity2.id, name: "운동2", userId: user.id },
-  ]);
+    expect(
+      async () => await activityService.selectActivities(new User())
+    ).rejects.toThrowError(ArgumentError);
+  });
 });
