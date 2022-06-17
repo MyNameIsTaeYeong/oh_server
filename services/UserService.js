@@ -1,3 +1,5 @@
+const ArgumentError = require("../errors/ArgumentError");
+
 class UserService {
   #userRepository;
 
@@ -5,13 +7,14 @@ class UserService {
     this.#userRepository = container.get("UserRepository");
   }
 
-  async join(user) {
-    await this.duplicateCheck(user);
+  async join({ users = [], user = {} }) {
+    if (!user.email) throw new ArgumentError("user id is not defined");
+    this.duplicateCheck({ users, user });
     return await this.#userRepository.save(user);
   }
 
-  async duplicateCheck(user) {
-    if (await this.#userRepository.findByEmail(user)) {
+  duplicateCheck({ users, user }) {
+    if (users.filter((item) => item.email === user.email).length > 0) {
       throw new Error("이미 존재하는 회원입니다.");
     }
   }
