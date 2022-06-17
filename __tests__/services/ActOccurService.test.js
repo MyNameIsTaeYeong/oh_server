@@ -1,3 +1,7 @@
+const Activity = require("../../domains/Activity");
+const ActOccur = require("../../domains/ActOccur");
+const User = require("../../domains/User");
+const ArgumentError = require("../../errors/ArgumentError");
 const ActOccurService = require("../../services/ActOccurService");
 const Container = require("typedi").Container;
 
@@ -336,5 +340,168 @@ describe("actOccurService의 selectRelatedActAndEmo", () => {
         emoOccursOfUser,
       })
     ).toStrictEqual([{ 기쁨: 1, 슬픔: 1, 화남: 2 }, {}]);
+  });
+});
+
+describe("actOccurService의 createActOccur", () => {
+  test("actOccur의 name이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.userId = 1;
+    actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.createActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("actOccur의 userId가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.name = "haha";
+    //actOccur.userId = 1;
+    actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.createActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("actOccur의 recordId가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.name = "haha";
+    actOccur.userId = 1;
+    //actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.createActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+});
+
+describe("actOccurService의 deleteActOccur", () => {
+  test("actOccur의 id가 없으면 ArgumentError를 던진다", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    //actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.name = "haha";
+    actOccur.userId = 1;
+    actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.deleteActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("actOccur의 name이 없으면 ArgumentError를 던진다", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    //actOccur.name = "haha";
+    actOccur.userId = 1;
+    actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.deleteActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("actOccur의 userId가 없으면 ArgumentError를 던진다", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.name = "haha";
+    //actOccur.userId = 1;
+    actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.deleteActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("actOccur의 recordId가 없으면 ArgumentError를 던진다", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const actOccur = new ActOccur();
+    actOccur.id = 1;
+    actOccur.date = "asd";
+    actOccur.name = "haha";
+    actOccur.userId = 1;
+    //actOccur.recordId = 1;
+    expect(
+      async () => await actOccurService.deleteActOccur(actOccur)
+    ).rejects.toThrowError(ArgumentError);
+  });
+});
+
+describe("actOccurService의 selectActOccurByUserId", () => {
+  test("user.id가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const user = new User();
+    //user.id = 1;
+    user.email = "haha";
+    expect(
+      async () => await actOccurService.selectActOccurByUserId(user)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("user.email이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const user = new User();
+    user.id = 1;
+    //user.email = "haha";
+    expect(
+      async () => await actOccurService.selectActOccurByUserId(user)
+    ).rejects.toThrowError(ArgumentError);
+  });
+});
+
+describe("actOccurService의 selectActOccurByRecordId", () => {
+  test("activity의 id가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const activity = new Activity();
+    //activity.id = 1;
+    activity.name = "ja";
+    activity.userId = 1;
+    expect(
+      async () => await actOccurService.selectActOccurByRecordId(activity)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 name이 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const activity = new Activity();
+    activity.id = 1;
+    //activity.name = "ja";
+    activity.userId = 1;
+    expect(
+      async () => await actOccurService.selectActOccurByRecordId(activity)
+    ).rejects.toThrowError(ArgumentError);
+  });
+
+  test("activity의 userId가 없으면 ArgumentError를 던진다.", async () => {
+    Container.set("ActivityOccurRepository", {});
+    const actOccurService = new ActOccurService(Container);
+    const activity = new Activity();
+    activity.id = 1;
+    activity.name = "ja";
+    //activity.userId = 1;
+    expect(
+      async () => await actOccurService.selectActOccurByRecordId(activity)
+    ).rejects.toThrowError(ArgumentError);
   });
 });
