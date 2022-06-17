@@ -22,9 +22,9 @@ class ActOccurService {
   }
 
   selectRelatedActAndEmo({
-    actOccursOfActivity,
-    emoOccursOfUser,
-    actOccursOfUser,
+    actOccursOfActivity = [],
+    emoOccursOfUser = [],
+    actOccursOfUser = [],
   }) {
     const targetDateSet = new Set(
       actOccursOfActivity.map((record) => record.date.toLocaleDateString())
