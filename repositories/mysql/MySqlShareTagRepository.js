@@ -5,6 +5,7 @@ const RecordRepository = require("../RecordRepository");
 
 class MySqlShareTagRepository extends RecordRepository {
   #POOL;
+
   constructor(container) {
     super();
     this.#POOL = container.get("POOL");
@@ -56,11 +57,9 @@ class MySqlShareTagRepository extends RecordRepository {
       return (
         await this.#POOL.execute(
           `SELECT id, content, likeCnt, ShareTags.userId, tagId as myLike
-             FROM ShareTags 
-             LEFT JOIN Likes
-             ON Likes.userId=? 
-             AND ShareTags.id = Likes.tagId
-             LIMIT ${page}, 20`,
+             FROM ShareTags LEFT JOIN Likes
+             ON Likes.userId=? AND ShareTags.id = Likes.tagId
+             LIMIT ${page * 20}, 20`,
           [user.id]
         )
       )[0];
@@ -98,6 +97,40 @@ class MySqlShareTagRepository extends RecordRepository {
           throw new ReadError("Nodejs Error", error);
         case "PROTOCOL_CONNECTION_LOST":
           throw new ReadError("Connection Lost", error);
+        default:
+          throw new UnexpectedError("UnexpectedError", error);
+      }
+    }
+  }
+
+  // 수동테스트
+  async updateLikeCnt({ shareTag, cnt }) {
+    let conn;
+
+    try {
+      conn = await this.#POOL.getConnection();
+      conn.beginTransaction();
+
+      const curLikeCnt = conn.execute(
+        `SELECT likeCnt FROM ShareTags WHERE id=? FOR UPDATE`,
+        [shareTag.id]
+      );
+      conn.execute(`UPDATE ShareTags SET likeCnt=? WHERE id=?`, [
+        curLikeCnt[0][0].likeCnt + Number(cnt),
+        shareTag.id,
+      ]);
+
+      await conn.commit();
+    } catch (error) {
+      await conn.rollback();
+
+      switch (error.code) {
+        case "ER_ACCESS_DENIED_ERROR":
+          throw new WriteError("MySql Server Error", error);
+        case "ECONNREFUSED":
+          throw new WriteError("Nodejs Error", error);
+        case "PROTOCOL_CONNECTION_LOST":
+          throw new WriteError("Connection Lost", error);
         default:
           throw new UnexpectedError("UnexpectedError", error);
       }
