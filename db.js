@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const masterPOOL = mysql
+const writePOOL = mysql
   .createPool({
     host: process.env.MASTER,
     user: process.env.DATABASEUSER,
@@ -17,7 +17,7 @@ const masterPOOL = mysql
   })
   .promise();
 
-const slavePOOL = mysql
+const readPOOL = mysql
   .createPool({
     host: process.env.SLAVE,
     user: process.env.DATABASEUSER,
@@ -32,7 +32,7 @@ const slavePOOL = mysql
 
 const getConnection = async () => {
   try {
-    const conn = await masterPOOL.getConnection();
+    const conn = await writePOOL.getConnection();
     return conn;
   } catch (error) {
     console.log(error);
@@ -42,7 +42,7 @@ const getConnection = async () => {
 
 const readFromDB = async (query, params) => {
   try {
-    const result = (await slavePOOL.execute(query, params))[0];
+    const result = (await readPOOL.execute(query, params))[0];
     return result;
   } catch (error) {
     console.log(error);
@@ -52,7 +52,7 @@ const readFromDB = async (query, params) => {
 
 const writeToDB = async (query, params) => {
   try {
-    const result = (await masterPOOL.execute(query, params))[0];
+    const result = (await writePOOL.execute(query, params))[0];
     return result;
   } catch (error) {
     console.log(error);
@@ -77,8 +77,8 @@ init();
 
 module.exports = {
   cache,
-  masterPOOL,
-  slavePOOL,
+  writePOOL,
+  readPOOL,
   getConnection,
   readFromDB,
   writeToDB,
