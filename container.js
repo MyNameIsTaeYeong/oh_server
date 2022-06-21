@@ -54,5 +54,4 @@ Container.set("UserRepository", new MySqlUserRepository(Container));
 Container.set("UserService", new UserService(Container));
 
 // REDIS
-Container.set("REDIS", cache);
-Container.set("cache", new Redis(Container));
+Container.set("cache", cache);

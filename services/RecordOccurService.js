@@ -2,9 +2,11 @@ const ArgumentError = require("../errors/ArgumentError");
 
 class RecordOccurService {
   #recordOccurRepository;
+  #recordOccurRepository2;
 
   constructor(container) {
     this.#recordOccurRepository = container.get("RecordOccurRepository");
+    this.#recordOccurRepository2 = container.get("RecordOccurRepository2");
   }
 
   // actOccur
@@ -13,13 +15,16 @@ class RecordOccurService {
   // #name;
   // #userId;
   // #recordId;
-  async createRecordOccur(recordOccur = {}) {
+  async createRecordOccur({ recordOccur }) {
     if (!recordOccur.name)
       throw new ArgumentError("recordOccur.name is not defined");
     if (!recordOccur.userId)
       throw new ArgumentError("recordOccur.userId is not defined");
+    if (!recordOccur.date)
+      throw new ArgumentError("recordOccur.date is not defined");
     if (!recordOccur.recordId)
       throw new ArgumentError("recordOccur.recordId is not defined");
+
     return await this.#recordOccurRepository.save(recordOccur);
   }
 
@@ -54,31 +59,25 @@ class RecordOccurService {
     return await this.#recordOccurRepository.findByRecordId(record);
   }
 
-  selectRelatedEmoAndAct({
-    targetRecordOccurs = [],
-    emoOccursOfUser = [],
-    actOccursOfUser = [],
-  }) {
+  async selectRelatedRecords({ targetRecord, user }) {
     const targetDateSet = new Set(
-      targetRecordOccurs.map((record) => record.date.toLocaleDateString())
+      (await this.#recordOccurRepository.findByRecordId(targetRecord)).map(
+        (record) => record.date.toLocaleDateString()
+      )
     );
 
     return [
-      emoOccursOfUser
+      (await this.#recordOccurRepository.findByUserId(user))
         .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
         .reduce((prev, cur) => {
-          prev[cur.emotionName]
-            ? prev[cur.emotionName]++
-            : (prev[cur.emotionName] = 1);
+          prev[cur.name] ? prev[cur.name]++ : (prev[cur.name] = 1);
           return prev;
         }, {}),
 
-      actOccursOfUser
+      (await this.#recordOccurRepository2.findByUserId(user))
         .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
         .reduce((prev, cur) => {
-          prev[cur.activityName]
-            ? prev[cur.activityName]++
-            : (prev[cur.activityName] = 1);
+          prev[cur.name] ? prev[cur.name]++ : (prev[cur.name] = 1);
           return prev;
         }, {}),
     ];

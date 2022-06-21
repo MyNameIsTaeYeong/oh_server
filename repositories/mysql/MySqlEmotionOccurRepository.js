@@ -64,7 +64,7 @@ class MySqlEmotionOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT * FROM EmoOccurrences WHERE userId=?`,
+          `SELECT id, data, emotionName as name, userId, recordId FROM EmoOccurrences WHERE userId=?`,
           [user.id]
         )
       )[0];
