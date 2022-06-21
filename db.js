@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const writePOOL = mysql
+const POOL = mysql
   .createPool({
     host: process.env.MASTER,
     user: process.env.DATABASEUSER,
@@ -17,46 +17,13 @@ const writePOOL = mysql
   })
   .promise();
 
-const readPOOL = mysql
-  .createPool({
-    host: process.env.SLAVE,
-    user: process.env.DATABASEUSER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    connectionLimit: 10,
-    waitForConnections: true,
-    connectTimeout: 2000,
-    queueLimit: 0,
-  })
-  .promise();
-
 const getConnection = async () => {
   try {
-    const conn = await writePOOL.getConnection();
+    const conn = await POOL.getConnection();
     return conn;
   } catch (error) {
     console.log(error);
     return -1;
-  }
-};
-
-const readFromDB = async (query, params) => {
-  try {
-    const result = (await readPOOL.execute(query, params))[0];
-    return result;
-  } catch (error) {
-    console.log(error);
-    return "error";
-  }
-};
-
-const writeToDB = async (query, params) => {
-  try {
-    const result = (await writePOOL.execute(query, params))[0];
-    return result;
-  } catch (error) {
-    console.log(error);
-    return "error";
   }
 };
 
@@ -77,9 +44,6 @@ init();
 
 module.exports = {
   cache,
-  writePOOL,
-  readPOOL,
+  POOL,
   getConnection,
-  readFromDB,
-  writeToDB,
 };

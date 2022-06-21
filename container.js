@@ -1,4 +1,5 @@
-const { writePOOL, readPOOL } = require("./db");
+const { POOL, cache } = require("./db");
+const Redis = require("./domains/Redis");
 const MySqlActivityOccurRepository = require("./repositories/mysql/MySqlActivityOccurRepository");
 const MySqlActivityRepository = require("./repositories/mysql/MySqlActivityRepository");
 const MySqlEmotionOccurRepository = require("./repositories/mysql/MySqlEmotionOccurRepository");
@@ -16,74 +17,42 @@ require("reflect-metadata");
 const Container = require("typedi").Container;
 
 // POOL
-Container.set("POOL", writePOOL);
+Container.set("POOL", POOL);
 
 // ActivityOccur
 Container.set(
   "RecordOccurRepository",
   new MySqlActivityOccurRepository(Container)
 );
-Container.set(
-  "ActivityOccurServiceForWrite",
-  new RecordOccurService(Container)
-);
+Container.set("ActivityOccurService", new RecordOccurService(Container));
 
 // Activity
 Container.set("RecordRepository", new MySqlActivityRepository(Container));
-Container.set("ActivityServiceForWrite", new RecordService(Container));
+Container.set("ActivityService", new RecordService(Container));
 
 // EmotionOccur
 Container.set(
   "RecordOccurRepository",
   new MySqlEmotionOccurRepository(Container)
 );
-Container.set("EmotionOccurServiceForWrite", new RecordOccurService(Container));
+Container.set("EmotionOccurService", new RecordOccurService(Container));
 
 // Emotion
 Container.set("RecordRepository", new MySqlEmotionRepository(Container));
-Container.set("EmotionServiceForWrite", new RecordService(Container));
+Container.set("EmotionService", new RecordService(Container));
 
 // ShareTag
 Container.set("shareTagRepository", new MySqlShareTagRepository(Container));
-Container.set("ShareTagServiceForWrite", new ShareTagService(Container));
+Container.set("ShareTagService", new ShareTagService(Container));
 
 // Like
 Container.set("LikeRepository", new MySqlLikeRepository(Container));
-Container.set("LikeServiceForWrite", new LikeService(Container));
-
-// POOL
-Container.set("POOL", readPOOL);
-
-// ActivityOccur
-Container.set(
-  "RecordOccurRepository",
-  new MySqlActivityOccurRepository(Container)
-);
-Container.set("ActivityOccurServiceForRead", new RecordOccurService(Container));
-
-// Activity
-Container.set("RecordRepository", new MySqlActivityRepository(Container));
-Container.set("ActivityServiceForRead", new RecordService(Container));
-
-// EmotionOccur
-Container.set(
-  "RecordOccurRepository",
-  new MySqlEmotionOccurRepository(Container)
-);
-Container.set("EmotionOccurServiceForRead", new RecordOccurService(Container));
-
-// Emotion
-Container.set("RecordRepository", new MySqlEmotionRepository(Container));
-Container.set("EmotionServiceForRead", new RecordService(Container));
-
-// ShareTag
-Container.set("shareTagRepository", new MySqlShareTagRepository(Container));
-Container.set("ShareTagServiceForRead", new ShareTagService(Container));
-
-// Like
-Container.set("LikeRepository", new MySqlLikeRepository(Container));
-Container.set("LikeServiceForRead", new LikeService(Container));
+Container.set("LikeService", new LikeService(Container));
 
 // User
 Container.set("UserRepository", new MySqlUserRepository(Container));
 Container.set("UserService", new UserService(Container));
+
+// REDIS
+Container.set("REDIS", cache);
+Container.set("cache", new Redis(Container));

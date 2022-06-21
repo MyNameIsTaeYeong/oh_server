@@ -2,8 +2,9 @@ class User {
   #id;
   #email;
 
-  constructor(email) {
+  constructor({ id, email }) {
     this.#email = email;
+    this.#id = id;
   }
 
   set id(id) {

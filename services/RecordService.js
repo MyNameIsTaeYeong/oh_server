@@ -29,7 +29,6 @@ class RecordService {
   async selectRecords(user = {}) {
     // user id, email
     if (!user.id) throw new ArgumentError("user id is undefined");
-    if (!user.email) throw new ArgumentError("user email is undefined");
     return await this.#recordRepository.findAll(user);
   }
 }

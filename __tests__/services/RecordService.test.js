@@ -95,17 +95,4 @@ describe("RecordService의 selectRecords", () => {
       async () => await recordService.selectRecords(user)
     ).rejects.toThrowError(ArgumentError);
   });
-
-  test("user의 email이 없으면 ArgumentError를 던진다.", async () => {
-    Container.set("RecordRepository", {});
-    const recordService = new RecordService(Container);
-
-    const user = new User();
-    user.id = 1;
-    //user.email = "ha";
-
-    expect(
-      async () => await recordService.selectRecords(user)
-    ).rejects.toThrowError(ArgumentError);
-  });
 });
