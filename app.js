@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyToken } = require("./middlewares");
+const { verifyToken, errorCollector } = require("./middlewares");
 const activitiesRouter = require("./routers/activitiesRouter");
 const actOccursRouter = require("./routers/actOccursRouter");
 const emoOccursRouter = require("./routers/emoOccursRouter");
@@ -22,5 +22,5 @@ app.use("/emooccurrences", emoOccursRouter);
 app.use("/actoccurrences", actOccursRouter);
 app.use("/sharetags", shareTagsRouter);
 app.use("/likes", likesRouter);
-
+app.use(errorCollector);
 module.exports = app;

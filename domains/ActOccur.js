@@ -5,6 +5,14 @@ class ActOccur {
   #userId;
   #recordId;
 
+  constructor({ id, date, name, userId, recordId }) {
+    this.#id = id;
+    this.#date = date;
+    this.#name = name;
+    this.#userId = userId;
+    this.#recordId = recordId;
+  }
+
   get id() {
     return this.#id;
   }

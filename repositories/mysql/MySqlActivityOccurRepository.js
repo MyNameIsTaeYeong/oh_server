@@ -77,7 +77,7 @@ class MySqlActivityOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT * FROM ActOccurrences WHERE userId=?`,
+          `SELECT id, data, activityName as name, userId, recordId  FROM ActOccurrences WHERE userId=?`,
           [user.id]
         )
       )[0];
