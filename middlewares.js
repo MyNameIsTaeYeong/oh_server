@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const { issueAtoken, getCache } = require("./utilities");
 dotenv.config();
+const Container = require("typedi").Container;
 
 const verifyToken = async (req, res, next) => {
   try {
@@ -11,13 +12,11 @@ const verifyToken = async (req, res, next) => {
     );
 
     if (decoded.which === "refresh") {
-      const row = await getCache({
-        resource: "RefreshTokens",
-        id: decoded.id,
-        duration: 108000,
-      });
+      const refreshToken = await Container.get("cache").get(
+        `${"RefreshToken"}:${decoded.id}`
+      );
 
-      if (row[0].refreshToken !== req.headers.authorization) {
+      if (refreshToken !== req.headers.authorization) {
         return res.status(401).json({
           code: 401,
           message: "JsonWebTokenError",
@@ -54,4 +53,10 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken };
+const errorCollector = (error, req, res, next) => {
+  console.log(`여기는 errorCollector error : ${error}`);
+  res.status(500).res.json({ error });
+  return res.end();
+};
+
+module.exports = { verifyToken, errorCollector };

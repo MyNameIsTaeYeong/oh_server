@@ -1,5 +1,5 @@
 const express = require("express");
-const { verifyToken } = require("./middlewares");
+const { verifyToken, errorCollector } = require("./middlewares");
 const activitiesRouter = require("./routers/activitiesRouter");
 const actOccursRouter = require("./routers/actOccursRouter");
 const emoOccursRouter = require("./routers/emoOccursRouter");
@@ -22,10 +22,5 @@ app.use("/emooccurrences", emoOccursRouter);
 app.use("/actoccurrences", actOccursRouter);
 app.use("/sharetags", shareTagsRouter);
 app.use("/likes", likesRouter);
-// app.use((error, req, res, next) => {
-//   console.log("1111111");
-//   console.log(error);
-//   res.status(500).res.json({ error });
-//   return res.end();
-// });
+app.use(errorCollector);
 module.exports = app;

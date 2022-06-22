@@ -1,5 +1,4 @@
 const { POOL, cache } = require("./db");
-const Redis = require("./domains/Redis");
 const MySqlActivityOccurRepository = require("./repositories/mysql/MySqlActivityOccurRepository");
 const MySqlActivityRepository = require("./repositories/mysql/MySqlActivityRepository");
 const MySqlEmotionOccurRepository = require("./repositories/mysql/MySqlEmotionOccurRepository");
@@ -19,25 +18,33 @@ const Container = require("typedi").Container;
 // POOL
 Container.set("POOL", POOL);
 
-// ActivityOccur
+// ActivityOccurService 의존관계
 Container.set(
   "RecordOccurRepository",
   new MySqlActivityOccurRepository(Container)
 );
+Container.set(
+  "RecordOccurRepository2",
+  new MySqlEmotionOccurRepository(Container)
+);
 Container.set("ActivityOccurService", new RecordOccurService(Container));
 
-// Activity
-Container.set("RecordRepository", new MySqlActivityRepository(Container));
-Container.set("ActivityService", new RecordService(Container));
-
-// EmotionOccur
+// EmotionOccurService 의존관계
 Container.set(
   "RecordOccurRepository",
   new MySqlEmotionOccurRepository(Container)
 );
+Container.set(
+  "RecordOccurRepository2",
+  new MySqlActivityOccurRepository(Container)
+);
 Container.set("EmotionOccurService", new RecordOccurService(Container));
 
-// Emotion
+// ActivityService 의존관계
+Container.set("RecordRepository", new MySqlActivityRepository(Container));
+Container.set("ActivityService", new RecordService(Container));
+
+// EmotionService 의존관계
 Container.set("RecordRepository", new MySqlEmotionRepository(Container));
 Container.set("EmotionService", new RecordService(Container));
 

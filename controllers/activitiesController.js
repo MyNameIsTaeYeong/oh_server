@@ -1,19 +1,17 @@
-const { readFromDB, writeToDB } = require("../db");
+const User = require("../domains/User");
 
-const getActivities = async (req, res) => {
-  const rtn = {
-    code: 200,
-    results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
-      req.params.id,
-    ]),
-  };
+const Container = require("typedi").Container;
 
-  if (req.newAccessToken) {
-    rtn.accessToken = req.newAccessToken;
-  }
-
-  rtn.results === "error" ? res.status(500) : res.json(rtn);
-  res.end();
+const getActivities = async (req, res, next) => {
+  Container.get("ActivityService")
+    .selectRecords(new User({ id: req.params.id }))
+    .then((results) => {
+      req.newAccessToken
+        ? res.json({ code: 200, results, accessToken: req.newAccessToken })
+        : res.json({ code: 200, results });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
 const postActivities = async (req, res) => {
@@ -57,3 +55,19 @@ const deleteActivities = async (req, res) => {
 };
 
 module.exports = { getActivities, postActivities, deleteActivities };
+
+// const getActivities = async (req, res) => {
+//   const rtn = {
+//     code: 200,
+//     results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
+//       req.params.id,
+//     ]),
+//   };
+
+//   if (req.newAccessToken) {
+//     rtn.accessToken = req.newAccessToken;
+//   }
+
+//   rtn.results === "error" ? res.status(500) : res.json(rtn);
+//   res.end();
+// };
