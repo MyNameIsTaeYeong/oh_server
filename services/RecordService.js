@@ -20,8 +20,6 @@ class RecordService {
   //emotion id, name, userId
   async deleteRecord(record = {}) {
     if (!record.id) throw new ArgumentError("record id is undefined");
-    if (!record.name) throw new ArgumentError("record name is undefined");
-    if (!record.userId) throw new ArgumentError("record userId is undefined");
 
     await this.#recordRepository.remove(record);
   }

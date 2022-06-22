@@ -34,7 +34,7 @@ const cache = redis.createClient({
 cache.on("error", (err) => console.log("Redis Client Error", err));
 cache.on("connect", () => console.log("Redis start connection"));
 cache.on("ready", () => console.log("Redis ready!"));
-cache.on("end", () => console.log("Redis disconnected!"));
+//cache.on("end", () => console.log("Redis disconnected!"));
 
 const init = async () => {
   await cache.connect();

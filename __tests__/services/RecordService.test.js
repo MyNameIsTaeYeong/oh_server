@@ -52,34 +52,6 @@ describe("RecordService의 deleteRecord", () => {
       async () => await recordService.deleteRecord(record)
     ).rejects.toThrowError(ArgumentError);
   });
-
-  test("record의 name이 없으면 ArgumentError를 던진다.", async () => {
-    Container.set("RecordRepository", {});
-    const recordService = new RecordService(Container);
-
-    const record = new Activity();
-    record.id = 1;
-    //record.name = "ha";
-    record.userId = 1;
-
-    expect(
-      async () => await recordService.deleteRecord(record)
-    ).rejects.toThrowError(ArgumentError);
-  });
-
-  test("record의 userId가 없으면 ArgumentError를 던진다.", async () => {
-    Container.set("RecordRepository", {});
-    const recordService = new RecordService(Container);
-
-    const record = new Activity();
-    record.id = 1;
-    record.name = "ha";
-    //record.userId = 1;
-
-    expect(
-      async () => await recordService.deleteRecord(record)
-    ).rejects.toThrowError(ArgumentError);
-  });
 });
 
 describe("RecordService의 selectRecords", () => {

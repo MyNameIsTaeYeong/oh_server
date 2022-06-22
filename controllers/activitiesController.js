@@ -1,3 +1,4 @@
+const Activity = require("../domains/Activity");
 const User = require("../domains/User");
 
 const Container = require("typedi").Container;
@@ -14,60 +15,30 @@ const getActivities = async (req, res, next) => {
     .catch((e) => next(e));
 };
 
-const postActivities = async (req, res) => {
-  const rtn = {
-    code: 200,
-    insertId: (
-      await writeToDB(`INSERT INTO Activities(name, userId) VALUES(?, ?)`, [
-        req.body.name,
-        req.body.userId,
-      ])
-    ).insertId,
-  };
-
-  if (req.newAccessToken) {
-    rtn.accessToken = req.newAccessToken;
-  }
-
-  rtn.insertId === "error" ? res.status(500) : res.status(200).json(rtn);
-  res.end();
+const postActivities = async (req, res, next) => {
+  Container.get("ActivityService")
+    .createRecord(
+      new Activity({ name: req.body.name, userId: req.body.userId })
+    )
+    .then((insertId) => {
+      req.newAccessToken
+        ? res.json({ code: 200, insertId, accessToken: req.newAccessToken })
+        : res.json({ code: 200, insertId });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
-const deleteActivities = async (req, res) => {
-  if (
-    (await writeToDB(`DELETE FROM Activities WHERE id=?`, [req.params.id])) ===
-    "error"
-  ) {
-    res.status(500);
-  } else {
-    const rtn = {
-      code: 200,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  }
-
-  res.end();
+const deleteActivities = async (req, res, next) => {
+  Container.get("ActivityService")
+    .deleteRecord(new Activity({ id: req.params.id }))
+    .then(() => {
+      req.newAccessToken
+        ? res.json({ code: 200, accessToken: req.newAccessToken })
+        : res.json({ code: 200 });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
 module.exports = { getActivities, postActivities, deleteActivities };
-
-// const getActivities = async (req, res) => {
-//   const rtn = {
-//     code: 200,
-//     results: await readFromDB(`SELECT * FROM Activities WHERE userId=?`, [
-//       req.params.id,
-//     ]),
-//   };
-
-//   if (req.newAccessToken) {
-//     rtn.accessToken = req.newAccessToken;
-//   }
-
-//   rtn.results === "error" ? res.status(500) : res.json(rtn);
-//   res.end();
-// };
