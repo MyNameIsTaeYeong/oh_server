@@ -1,104 +1,56 @@
-const { masterPOOL, slavePOOL } = require("../db");
-const { getCache } = require("../utilities");
+const Activity = require("../domains/Activity");
+const ActOccur = require("../domains/ActOccur");
+const User = require("../domains/User");
+const Container = require("typedi").Container;
 
-const getActOccurs = async (req, res) => {
-  try {
-    const records = await getCache({
-      resource: "ActOccurrences",
-      id: req.params.id,
-    });
-
-    const rtn = {
-      code: 200,
-      results: records,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const getActOccurs = async (req, res, next) => {
+  Container.get("ActivityOccurService")
+    .selectRecordOccurByUserId(new User({ id: req.params.id }))
+    .then((results) => {
+      req.newAccessToken
+        ? res.json({ code: 200, results, accessToken: req.newAccessToken })
+        : res.json({ code: 200, results });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
-const postActOccurs = async (req, res) => {
-  try {
-    const { activityName, userId, recordId } = req.body;
-    const results = await masterPOOL.execute(
-      `INSERT INTO ActOccurrences(activityName, userId, recordId) VALUES(?, ?, ?)`,
-      [activityName, userId, recordId]
-    );
-
-    const rtn = {
-      code: 200,
-      insertId: results[0].insertId,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.status(200).json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const postActOccurs = async (req, res, next) => {
+  Container.get("ActivityOccurService")
+    .createRecordOccur({
+      recordOccur: new ActOccur({
+        name: req.body.activityName,
+        userId: req.body.userId,
+        date: new Date(),
+        recordId: req.body.recordId,
+      }),
+    })
+    .then((insertId) => {
+      req.newAccessToken
+        ? res.json({ code: 200, insertId, accessToken: req.newAccessToken })
+        : res.json({ code: 200, insertId });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
-const postActAndEmo = async (req, res) => {
-  try {
-    const temp = await Promise.all([
-      slavePOOL.execute(
-        `SELECT emotionName as name, count(emotionName) as cnt FROM EmoOccurrences as E
-            WHERE DATE_FORMAT(date, '%y-%m-%d')
-            IN (SELECT DATE_FORMAT(date, '%y-%m-%d') 
-                FROM ActOccurrences
-                WHERE activityName=? AND userId=?
-                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))
-            AND userId=?
-            GROUP BY emotionName;`,
-        [req.body.activityName, req.params.userId, req.params.userId]
-      ),
-      slavePOOL.execute(
-        `SELECT activityName as name, count(activityName) as cnt FROM ActOccurrences as A
-            WHERE DATE_FORMAT(date,'%y-%m-%d') 
-            IN (SELECT DATE_FORMAT(date, '%y-%m-%d')
-                FROM ActOccurrences 
-                WHERE activityName=? AND userId=?
-                GROUP BY DATE_FORMAT(date,'%y-%m-%d'))
-            AND userId=?
-            GROUP BY activityName;`,
-        [req.body.activityName, req.params.userId, req.params.userId]
-      ),
-    ]);
-
-    const results = [];
-    results.push(temp[0][0]);
-    results.push(temp[1][0]);
-
-    const rtn = {
-      code: 200,
-      results,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const postActAndEmo = async (req, res, next) => {
+  Container.get("ActivityOccurService")
+    .selectRelatedRecords({
+      targetRecord: new Activity({
+        id: req.body.recordId,
+        name: req.body.activityName,
+        userId: req.params.userId,
+      }),
+      user: new User({ id: req.params.userId }),
+    })
+    .then((results) => {
+      req.newAccessToken
+        ? res.json({ code: 200, results, accessToken: req.newAccessToken })
+        : res.json({ code: 200, results });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
 module.exports = { getActOccurs, postActOccurs, postActAndEmo };

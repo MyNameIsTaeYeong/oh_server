@@ -15,8 +15,8 @@ class MySqlActivityOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `INSERT INTO ActOccurrences(activityName, userId, recordId) VALUES(?, ?, ?)`,
-          [actOccur.name, actOccur.userId, actOccur.recordId]
+          `INSERT INTO ActOccurrences(activityName, userId, recordId, date) VALUES(?, ?, ?, ?)`,
+          [actOccur.name, actOccur.userId, actOccur.recordId, actOccur.date]
         )
       )[0].insertId;
     } catch (error) {
@@ -77,7 +77,7 @@ class MySqlActivityOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT id, data, activityName as name, userId, recordId  FROM ActOccurrences WHERE userId=?`,
+          `SELECT id, DATE_FORMAT(date,'%y-%m-%d') as date, activityName as name, userId, recordId  FROM ActOccurrences WHERE userId=?`,
           [user.id]
         )
       )[0];
@@ -99,7 +99,7 @@ class MySqlActivityOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT * FROM ActOccurrences WHERE recordId=?`,
+          `SELECT id, DATE_FORMAT(date,'%y-%m-%d') as date, activityName as name, userId, recordId FROM ActOccurrences WHERE recordId=?`,
           [activity.id]
         )
       )[0];

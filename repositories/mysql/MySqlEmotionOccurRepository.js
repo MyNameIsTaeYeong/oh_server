@@ -64,7 +64,7 @@ class MySqlEmotionOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT id, data, emotionName as name, userId, recordId FROM EmoOccurrences WHERE userId=?`,
+          `SELECT id, DATE_FORMAT(date,'%y-%m-%d') as date, emotionName as name, userId, recordId FROM EmoOccurrences WHERE userId=?`,
           [user.id]
         )
       )[0];
@@ -86,7 +86,7 @@ class MySqlEmotionOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `SELECT * FROM EmoOccurrences WHERE recordId=?`,
+          `SELECT id, DATE_FORMAT(date,'%y-%m-%d') as date, emotionName as name, userId, recordId FROM EmoOccurrences WHERE recordId=?`,
           [emotion.id]
         )
       )[0];
