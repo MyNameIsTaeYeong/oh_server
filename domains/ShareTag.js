@@ -3,6 +3,12 @@ class ShareTag {
   #content;
   #userId;
 
+  constructor({ id, content, userId }) {
+    this.#id = id;
+    this.#content = content;
+    this.#userId = userId;
+  }
+
   get id() {
     return this.#id;
   }

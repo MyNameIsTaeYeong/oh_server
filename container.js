@@ -18,6 +18,9 @@ const Container = require("typedi").Container;
 // POOL
 Container.set("POOL", POOL);
 
+// REDIS
+Container.set("cache", cache);
+
 // ActivityOccurService 의존관계
 Container.set(
   "RecordOccurRepository",
@@ -59,6 +62,3 @@ Container.set("LikeService", new LikeService(Container));
 // User
 Container.set("UserRepository", new MySqlUserRepository(Container));
 Container.set("UserService", new UserService(Container));
-
-// REDIS
-Container.set("cache", cache);

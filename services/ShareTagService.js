@@ -1,10 +1,14 @@
 const ArgumentError = require("../errors/ArgumentError");
+const UnexpectedError = require("../errors/UnexpectedError");
+const WriteError = require("../errors/WriteError");
 
 class ShareTagService {
   #shareTagRepository;
+  #cache;
 
   constructor(container) {
     this.#shareTagRepository = container.get("shareTagRepository");
+    this.#cache = container.get("cache");
   }
 
   // shareTag id, content, userId
@@ -44,13 +48,21 @@ class ShareTagService {
 
   async updateLikeCnt({ shareTag = {}, cnt }) {
     if (!shareTag.id) throw new ArgumentError("shareTag id is undefined");
-    if (!shareTag.content)
-      throw new ArgumentError("shareTag content is undefined");
-    if (!shareTag.userId)
-      throw new ArgumentError("shareTag userId is undefined");
     if (!cnt) throw new ArgumentError("cnt is undefined");
 
-    await this.#shareTagRepository.updateLikeCnt({ shareTag, cnt });
+    let nextCnt;
+    try {
+      Number(cnt) === 1
+        ? (nextCnt = await this.#cache.INCR(`shareTag:${shareTag.id}`))
+        : (nextCnt = await this.#cache.DECR(`shareTag:${shareTag.id}`));
+    } catch (error) {
+      console.log(`REDIS ERROR : ${error}`);
+      return await this.#shareTagRepository.updateLikeCnt({ shareTag, cnt });
+    }
+
+    if (Number(nextCnt) % Number(100) === Number(0)) {
+      await this.#shareTagRepository.setLikeCnt({ shareTag, nextCnt });
+    }
   }
 }
 

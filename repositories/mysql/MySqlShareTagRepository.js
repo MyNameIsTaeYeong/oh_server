@@ -103,6 +103,26 @@ class MySqlShareTagRepository extends RecordRepository {
     }
   }
 
+  async setLikeCnt({ shareTag, nextCnt }) {
+    try {
+      await this.#POOL.execute(`UPDATE ShareTags SET likeCnt=? WHERE id=?`, [
+        nextCnt,
+        shareTag.id,
+      ]);
+    } catch (error) {
+      switch (error.code) {
+        case "ER_ACCESS_DENIED_ERROR":
+          throw new WriteError("MySql Server Error", error);
+        case "ECONNREFUSED":
+          throw new WriteError("Nodejs Error", error);
+        case "PROTOCOL_CONNECTION_LOST":
+          throw new WriteError("Connection Lost", error);
+        default:
+          throw new UnexpectedError("UnexpectedError", error);
+      }
+    }
+  }
+
   // 수동테스트
   async updateLikeCnt({ shareTag, cnt }) {
     let conn;
@@ -111,10 +131,11 @@ class MySqlShareTagRepository extends RecordRepository {
       conn = await this.#POOL.getConnection();
       conn.beginTransaction();
 
-      const curLikeCnt = conn.execute(
+      const curLikeCnt = await conn.execute(
         `SELECT likeCnt FROM ShareTags WHERE id=? FOR UPDATE`,
         [shareTag.id]
       );
+
       conn.execute(`UPDATE ShareTags SET likeCnt=? WHERE id=?`, [
         curLikeCnt[0][0].likeCnt + Number(cnt),
         shareTag.id,
@@ -134,6 +155,8 @@ class MySqlShareTagRepository extends RecordRepository {
         default:
           throw new UnexpectedError("UnexpectedError", error);
       }
+    } finally {
+      conn.release();
     }
   }
 }

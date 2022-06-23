@@ -1,4 +1,4 @@
-const { masterPOOL, slavePOOL, getConnection } = require("../db");
+const { POOL, slavePOOL, getConnection } = require("../db");
 const dotenv = require("dotenv");
 const { issueAtoken, setCache } = require("../utilities");
 
@@ -6,25 +6,24 @@ dotenv.config();
 
 const getUsers = async (req, res) => {
   try {
-    const results = await slavePOOL.execute(
-      `SELECT * FROM Users WHERE email=?`,
-      [req.params.email]
-    );
+    const results = await POOL.execute(`SELECT * FROM Users WHERE email=?`, [
+      req.params.email,
+    ]);
     const userId = results[0][0].id;
     const accessToken = issueAtoken(userId, "access", "60m");
     const refreshToken = issueAtoken(userId, "refresh", "1800m");
 
-    await masterPOOL.execute(
+    await POOL.execute(
       `UPDATE RefreshTokens SET refreshToken=? WHERE userId=?`,
       [refreshToken, userId]
     );
 
-    await setCache({
-      resource: "RefreshTokens",
-      id: userId,
-      duration: 108000,
-      values: [{ userId, refreshToken }],
-    });
+    // await setCache({
+    //   resource: "RefreshTokens",
+    //   id: userId,
+    //   duration: 108000,
+    //   values: [{ userId, refreshToken }],
+    // });
 
     res.json({
       code: 200,

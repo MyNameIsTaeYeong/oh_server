@@ -57,6 +57,8 @@ const verifyToken = async (req, res, next) => {
 const errorCollector = (error, req, res, next) => {
   if (error instanceof UnexpectedError) {
     console.log(`여기는 errorCollector UnexpectedError : ${error.cause}`);
+  } else if (error instanceof TypeError) {
+    console.log(`여기는 errorCollector TypeError : ${error.cause}`);
   } else {
     console.log(`여기는 errorCollector error : ${error}`);
   }
