@@ -119,55 +119,55 @@ describe("RecordOccurService의 selectRelatedRecords", () => {
         Promise.resolve([
           {
             name: "운동",
-            date: new Date("2022-04-12 12:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "운동",
-            date: new Date("2022-04-08 10:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "운동",
-            date: new Date("2022-04-04 08:42:34"),
+            date: "2022-04-04",
           },
         ]),
       findByUserId: (param) =>
         Promise.resolve([
           {
             name: "운동",
-            date: new Date("2022-04-12 12:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "운동",
-            date: new Date("2022-04-08 10:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "운동",
-            date: new Date("2022-04-04 08:42:34"),
+            date: "2022-04-04",
           },
 
           {
             name: "독서",
-            date: new Date("2022-04-12 08:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "독서",
-            date: new Date("2022-04-15 08:42:34"),
+            date: "2022-04-15",
           },
           {
             name: "독서",
-            date: new Date("2022-04-08 08:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-08 18:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-09 18:42:34"),
+            date: "2022-04-09",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-10 18:42:34"),
+            date: "2022-04-10",
           },
         ]),
     });
@@ -177,39 +177,39 @@ describe("RecordOccurService의 selectRelatedRecords", () => {
         Promise.resolve([
           {
             name: "기쁨",
-            date: new Date("2022-04-04 15:42:34"),
+            date: "2022-04-04",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-05 10:00:34"),
+            date: "2022-04-05",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-06 10:10:20"),
+            date: "2022-04-06",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-09 13:02:04"),
+            date: "2022-04-09",
           },
           {
             name: "슬픔",
-            date: new Date("2022-04-08 15:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "짜증",
-            date: new Date("2022-03-28 15:42:34"),
+            date: "2022-03-28",
           },
           {
             name: "설렘",
-            date: new Date("2022-04-30 15:42:34"),
+            date: "2022-04-30",
           },
           {
             name: "화남",
-            date: new Date("2022-04-12 15:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "화남",
-            date: new Date("2022-04-08 10:42:34"),
+            date: "2022-04-08",
           },
         ]),
     });
@@ -236,40 +236,40 @@ describe("RecordOccurService의 selectRelatedRecords", () => {
         Promise.resolve([
           {
             name: "운동",
-            date: new Date("2022-04-12 12:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "운동",
-            date: new Date("2022-04-08 10:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "운동",
-            date: new Date("2022-04-04 08:42:34"),
+            date: "2022-04-04",
           },
 
           {
             name: "독서",
-            date: new Date("2022-04-12 08:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "독서",
-            date: new Date("2022-04-15 08:42:34"),
+            date: "2022-04-15",
           },
           {
             name: "독서",
-            date: new Date("2022-04-08 08:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-08 18:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-09 18:42:34"),
+            date: "2022-04-09",
           },
           {
             name: "숙면",
-            date: new Date("2022-04-10 18:42:34"),
+            date: "2022-04-10",
           },
         ]),
     });
@@ -279,39 +279,39 @@ describe("RecordOccurService의 selectRelatedRecords", () => {
         Promise.resolve([
           {
             name: "기쁨",
-            date: new Date("2022-04-04 15:42:34"),
+            date: "2022-04-04",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-05 10:00:34"),
+            date: "2022-04-05",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-06 10:10:20"),
+            date: "2022-04-06",
           },
           {
             name: "기쁨",
-            date: new Date("2022-04-09 13:02:04"),
+            date: "2022-04-09",
           },
           {
             name: "슬픔",
-            date: new Date("2022-04-08 15:42:34"),
+            date: "2022-04-08",
           },
           {
             name: "짜증",
-            date: new Date("2022-03-28 15:42:34"),
+            date: "2022-03-28",
           },
           {
             name: "설렘",
-            date: new Date("2022-04-30 15:42:34"),
+            date: "2022-04-30",
           },
           {
             name: "화남",
-            date: new Date("2022-04-12 15:42:34"),
+            date: "2022-04-12",
           },
           {
             name: "화남",
-            date: new Date("2022-04-08 10:42:34"),
+            date: "2022-04-08s",
           },
         ]),
     });
@@ -419,19 +419,6 @@ describe("RecordOccurService의 selectRecordOccurByUserId", () => {
       async () => await recordOccurService.selectRecordOccurByUserId(user)
     ).rejects.toThrowError(ArgumentError);
   });
-
-  test("user.email이 없으면 ArgumentError를 던진다.", async () => {
-    // given
-    Container.set("RecordOccurRepository", {});
-    Container.set("RecordOccurRepository2", {});
-    const recordOccurService = new RecordOccurService(Container);
-    const user = new User({ id: 1 });
-
-    // when, then
-    expect(
-      async () => await recordOccurService.selectRecordOccurByUserId(user)
-    ).rejects.toThrowError(ArgumentError);
-  });
 });
 
 describe("RecordOccurService의 selectRecordOccurByRecordId", () => {
@@ -440,10 +427,11 @@ describe("RecordOccurService의 selectRecordOccurByRecordId", () => {
     Container.set("RecordOccurRepository", {});
     Container.set("RecordOccurRepository2", {});
     const recordOccurService = new RecordOccurService(Container);
-    const record = new Activity();
-    //record.id = 1;
-    record.name = "ja";
-    record.userId = 1;
+    const record = new Activity({
+      //id: 1,
+      name: "ja",
+      userId: 1,
+    });
 
     // when, then
     expect(
@@ -456,11 +444,11 @@ describe("RecordOccurService의 selectRecordOccurByRecordId", () => {
     Container.set("RecordOccurRepository", {});
     Container.set("RecordOccurRepository2", {});
     const recordOccurService = new RecordOccurService(Container);
-    const record = new Activity();
-    record.id = 1;
-    //record.name = "ja";
-    record.userId = 1;
-
+    const record = new Activity({
+      id: 1,
+      //name: "ja",
+      userId: 1,
+    });
     // when, then
     expect(
       async () => await recordOccurService.selectRecordOccurByRecordId(record)
@@ -472,10 +460,11 @@ describe("RecordOccurService의 selectRecordOccurByRecordId", () => {
     Container.set("RecordOccurRepository", {});
     Container.set("RecordOccurRepository2", {});
     const recordOccurService = new RecordOccurService(Container);
-    const record = new Activity();
-    record.id = 1;
-    record.name = "ja";
-    //record.userId = 1;
+    const record = new Activity({
+      id: 1,
+      name: "ja",
+      //userId: 1,
+    });
 
     // when, then
     expect(

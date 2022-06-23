@@ -44,8 +44,8 @@ class RecordOccurService {
   // #email;
   async selectRecordOccurByUserId(user = {}) {
     if (!user.id) throw new ArgumentError("user.id is not defined");
-    if (!user.email) throw new ArgumentError("user.email is not defined");
-    return await this.#recordOccurRepository.findAll(user);
+
+    return await this.#recordOccurRepository.findByUserId(user);
   }
 
   // Activity
@@ -62,20 +62,20 @@ class RecordOccurService {
   async selectRelatedRecords({ targetRecord, user }) {
     const targetDateSet = new Set(
       (await this.#recordOccurRepository.findByRecordId(targetRecord)).map(
-        (record) => record.date.toLocaleDateString()
+        (record) => record.date
       )
     );
 
     return [
       (await this.#recordOccurRepository.findByUserId(user))
-        .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
+        .filter((record) => targetDateSet.has(record.date))
         .reduce((prev, cur) => {
           prev[cur.name] ? prev[cur.name]++ : (prev[cur.name] = 1);
           return prev;
         }, {}),
 
       (await this.#recordOccurRepository2.findByUserId(user))
-        .filter((record) => targetDateSet.has(record.date.toLocaleDateString()))
+        .filter((record) => targetDateSet.has(record.date))
         .reduce((prev, cur) => {
           prev[cur.name] ? prev[cur.name]++ : (prev[cur.name] = 1);
           return prev;
