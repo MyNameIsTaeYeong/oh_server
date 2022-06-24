@@ -159,6 +159,10 @@ class MySqlShareTagRepository extends RecordRepository {
       conn.release();
     }
   }
+
+  async clear() {
+    await this.#POOL.execute(`DELETE FROM ShareTags`);
+  }
 }
 
 module.exports = MySqlShareTagRepository;

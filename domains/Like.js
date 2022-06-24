@@ -2,6 +2,11 @@ class Like {
   #userId;
   #tagId;
 
+  constructor({ userId, tagId }) {
+    this.#userId = userId;
+    this.#tagId = tagId;
+  }
+
   get userId() {
     return this.#userId;
   }

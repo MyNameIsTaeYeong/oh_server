@@ -1,14 +1,18 @@
-const ShareTag = require("../domains/ShareTag");
+const Like = require("../domains/Like");
 const Container = require("typedi").Container;
 
 const postLikes = async (req, res, next) => {
-  Container.get("ShareTagService")
-    .updateLikeCnt({
-      shareTag: new ShareTag({ id: req.body.tagId }),
-      cnt: Number(req.body.cnt),
-    })
+  Container.get("LikeService")
+    .createLike(new Like({ userId: req.body.userId, tagId: req.body.tagId }))
     .then(() => res.end())
     .catch((e) => next(e));
 };
 
-module.exports = { postLikes };
+const deleteLikes = async (req, res, next) => {
+  Container.get("LikeService")
+    .deleteLike(new Like({ userId: req.body.userId, tagId: req.body.tagId }))
+    .then(() => res.end())
+    .catch((e) => next(e));
+};
+
+module.exports = { postLikes, deleteLikes };
