@@ -1,75 +1,42 @@
-const { slavePOOL, masterPOOL } = require("../db");
+const Emotion = require("../domains/Emotion");
+const User = require("../domains/User");
 
-const getEmotions = async (req, res) => {
-  try {
-    const results = await slavePOOL.execute(
-      "SELECT * FROM Emotions WHERE userId=?",
-      [req.params.id]
-    );
-    const rtn = {
-      code: 200,
-      results: results[0],
-    };
+const Container = require("typedi").Container;
 
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const getEmotions = async (req, res, next) => {
+  Container.get("EmotionService")
+    .selectRecords(new User({ id: req.params.id }))
+    .then((results) => {
+      req.newAccessToken
+        ? res.json({ code: 200, results, accessToken: req.newAccessToken })
+        : res.json({ code: 200, results });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
-const postEmotions = async (req, res) => {
-  try {
-    const { name, userId } = req.body;
-    const results = await masterPOOL.execute(
-      "INSERT INTO Emotions(name, userId) VALUES(?, ?)",
-      [name, userId]
-    );
-
-    const rtn = {
-      code: 200,
-      insertId: results[0].insertId,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.status(200).json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const postEmotions = async (req, res, next) => {
+  Container.get("EmotionService")
+    .createRecord(new Emotion({ name: req.body.name, userId: req.body.userId }))
+    .then((insertId) => {
+      req.newAccessToken
+        ? res.json({ code: 200, insertId, accessToken: req.newAccessToken })
+        : res.json({ code: 200, insertId });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
-const deleteEmotions = async (req, res) => {
-  try {
-    await masterPOOL.execute("DELETE FROM Emotions where id=?", [
-      req.params.id,
-    ]);
-    const rtn = {
-      code: 200,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const deleteEmotions = async (req, res, next) => {
+  Container.get("EmotionService")
+    .deleteRecord(new Emotion({ id: req.params.id }))
+    .then(() => {
+      req.newAccessToken
+        ? res.json({ code: 200, accessToken: req.newAccessToken })
+        : res.json({ code: 200 });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
 module.exports = { getEmotions, postEmotions, deleteEmotions };
