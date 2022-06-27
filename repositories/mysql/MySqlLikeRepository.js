@@ -72,6 +72,10 @@ class MySqlLikeRepository {
       }
     }
   }
+
+  async clear() {
+    await this.#POOL.execute(`DELETE FROM Likes`);
+  }
 }
 
 module.exports = MySqlLikeRepository;

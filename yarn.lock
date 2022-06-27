@@ -2990,8 +2990,8 @@
   dependencies:
     "picomatch" "^2.2.1"
 
-"redis-errors@^1.0.0":
-  "integrity" "sha1-62LSrbFeTq9GEMBK/hUpOEJQq60="
+"redis-errors@^1.0.0", "redis-errors@^1.2.0":
+  "integrity" "sha512-1qny3OExCf0UvUV/5wpYKf2YwPcOqXzkwKKSmKHiE6ZMQs5heeE/c8eXK+PNllPvmjgAbfnsbpkGZWy8cBpn9w=="
   "resolved" "https://registry.npmjs.org/redis-errors/-/redis-errors-1.2.0.tgz"
   "version" "1.2.0"
 

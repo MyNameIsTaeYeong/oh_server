@@ -34,7 +34,6 @@ class ShareTagService {
   async selectShareTags({ user = {}, page }) {
     // user id, email
     if (!user.id) throw new ArgumentError("user id is undefined");
-    if (!user.email) throw new ArgumentError("user email is undefined");
     if (!page) throw new ArgumentError("page is undefined");
     return await this.#shareTagRepository.findAll({ user, page });
   }
@@ -42,7 +41,6 @@ class ShareTagService {
   async selectMyShareTags(user = {}) {
     // user id, email
     if (!user.id) throw new ArgumentError("user id is undefined");
-    if (!user.email) throw new ArgumentError("user email is undefined");
     return await this.#shareTagRepository.findByUserId(user);
   }
 

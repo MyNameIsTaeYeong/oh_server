@@ -15,8 +15,8 @@ class MySqlEmotionOccurRepository extends RecordOccurRepository {
     try {
       return (
         await this.#POOL.execute(
-          `INSERT INTO EmoOccurrences(emotionName, userId, recordId) VALUES(?, ?, ?)`,
-          [emoOccur.name, emoOccur.userId, emoOccur.recordId]
+          `INSERT INTO EmoOccurrences(emotionName, userId, recordId, date) VALUES(?, ?, ?, ?)`,
+          [emoOccur.name, emoOccur.userId, emoOccur.recordId, emoOccur.date]
         )
       )[0].insertId;
     } catch (error) {

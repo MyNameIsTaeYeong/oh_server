@@ -1,62 +1,33 @@
-const { masterPOOL, slavePOOL } = require("../db");
+const ShareTag = require("../domains/ShareTag");
+const User = require("../domains/User");
+const Container = require("typedi").Container;
 
-const getShareTags = async (req, res) => {
-  try {
-    const page = Number(req.query.page) * 20;
-    const results = await slavePOOL.execute(
-      `SELECT id, content, likeCnt, ShareTags.userId, tagId as myLike
-       FROM ShareTags 
-       LEFT JOIN Likes
-       ON Likes.userId=? 
-       AND ShareTags.id = Likes.tagId
-       LIMIT ${page}, 20`,
-      [req.params.id]
-    );
-
-    console.log(page);
-
-    const rtn = {
-      code: 200,
-      results: results[0],
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+const getShareTags = async (req, res, next) => {
+  Container.get("ShareTagService")
+    .selectShareTags({
+      user: new User({ id: req.params.id }),
+      page: req.query.page,
+    })
+    .then((results) => {
+      req.newAccessToken
+        ? res.json({ code: 200, results, accessToken: req.newAccessToken })
+        : res.json({ code: 200, results });
+      return res.end();
+    })
+    .catch((e) => next(e));
 };
 
 const postShareTags = async (req, res) => {
-  try {
-    const { content, userId } = req.body;
-    const results = await masterPOOL.execute(
-      "INSERT INTO ShareTags(content, userId) VALUES(?, ?)",
-      [content, userId]
-    );
-
-    const rtn = {
-      code: 200,
-      insertId: results[0].insertId,
-    };
-
-    if (req.newAccessToken) {
-      rtn.accessToken = req.newAccessToken;
-    }
-
-    res.status(200).json(rtn);
-  } catch (error) {
-    console.log(error);
-    res.status(500);
-  } finally {
-    return res.end();
-  }
+  Container.get("ShareTagService")
+    .createShareTag(
+      new ShareTag({ content: req.body.content, userId: req.body.userId })
+    )
+    .then((insertId) => {
+      req.newAccessToken
+        ? res.json({ code: 200, insertId, accessToken: req.newAccessToken })
+        : res.json({ code: 200, insertId });
+      return res.end();
+    });
 };
 
 module.exports = { postShareTags, getShareTags };
