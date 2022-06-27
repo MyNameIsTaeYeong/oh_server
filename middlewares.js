@@ -1,7 +1,9 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-const { issueAtoken, getCache } = require("./utilities");
+const { issueAtoken } = require("./utilities");
 const UnexpectedError = require("./errors/UnexpectedError");
+const DuplicatedError = require("./errors/DuplicatedError");
+const { RedisError } = require("redis-errors");
 dotenv.config();
 const Container = require("typedi").Container;
 
@@ -56,14 +58,21 @@ const verifyToken = async (req, res, next) => {
 
 const errorCollector = (error, req, res, next) => {
   if (error instanceof UnexpectedError) {
-    console.log(`여기는 errorCollector UnexpectedError : ${error.cause}`);
+    res.status(500);
   } else if (error instanceof TypeError) {
-    console.log(`여기는 errorCollector TypeError : ${error.cause}`);
+    res.status(500);
+  } else if (error instanceof DuplicatedError) {
+    res.status(409);
+  } else if (error instanceof RedisError) {
+    console.log(`RedisError ${error.name}`);
+    res.status(500);
   } else {
-    console.log(`여기는 errorCollector error : ${error}`);
+    res.status(500);
   }
 
-  res.status(500).res.json({ error });
+  console.log(`Error Message : ${error.message}`);
+  console.log(`Error cause : ${error.cause}`);
+
   return res.end();
 };
 

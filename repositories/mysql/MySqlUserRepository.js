@@ -13,11 +13,40 @@ class MySqlUserRepository extends UserRepository {
 
   async save(user) {
     try {
-      return (
+      const userId = (
         await this.#POOL.execute(`INSERT INTO Users(email) VALUES(?)`, [
           user.email,
         ])
       )[0].insertId;
+
+      await Promise.all([
+        this.#POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+          "기쁨",
+          userId,
+        ]),
+        this.#POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+          "화남",
+          userId,
+        ]),
+        this.#POOL.execute(`INSERT INTO Emotions(name, userId) VALUES(?,?)`, [
+          "슬픔",
+          userId,
+        ]),
+        this.#POOL.execute(
+          `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
+          ["운동", userId]
+        ),
+        this.#POOL.execute(
+          `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
+          ["독서", userId]
+        ),
+        this.#POOL.execute(
+          `INSERT INTO Activities(name, userId) VALUES(?, ?)`,
+          ["설거지", userId]
+        ),
+      ]);
+
+      return userId;
     } catch (error) {
       switch (error.code) {
         case "ER_ACCESS_DENIED_ERROR":

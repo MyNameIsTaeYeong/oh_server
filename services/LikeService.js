@@ -25,7 +25,7 @@ class LikeService {
       });
     } catch (error) {
       console.log("좋아요 1개 유실");
-      console.log(error);
+      throw error;
     }
   }
 
@@ -42,7 +42,7 @@ class LikeService {
       });
     } catch (error) {
       console.log("좋아요 -1개 유실");
-      console.log(error);
+      throw error;
     }
   }
 

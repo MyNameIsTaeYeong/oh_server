@@ -15,6 +15,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "redis": "^4.0.6",
+    "redis-errors": "^1.2.0",
     "reflect-metadata": "^0.1.13",
     "typedi": "^0.10.0"
   },

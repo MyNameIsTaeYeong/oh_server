@@ -1,67 +1,75 @@
 const request = require("supertest");
-const app = require("../app");
-const POOL = require("../db");
+const app = require("../../app");
 const dotenv = require("dotenv");
-const { issueAtoken } = require("../utilities");
+const MySqlUserRepository = require("../../repositories/mysql/MySqlUserRepository");
+const MySqlEmotionRepository = require("../../repositories/mysql/MySqlEmotionRepository");
+const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
+const User = require("../../domains/User");
 dotenv.config();
-jest.mock("../db");
-jest.mock("../utilities");
 
-// [ RowDataPacket { id: 1, email: 'imtaebari@gmail.com' } ]
+require("../../container");
+const Container = require("typedi").Container;
+
+const userDB = new MySqlUserRepository(Container);
+const emotionDB = new MySqlEmotionRepository(Container);
+const activityDB = new MySqlActivityRepository(Container);
+const cache = Container.get("cache");
+
+afterAll(async () => {
+  await userDB.clear();
+  await Container.get("cache").flushAll();
+  Container.get("POOL").end();
+  Container.get("cache").QUIT();
+});
+
 describe("getUsers", () => {
-  test("getUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환해야 한다.", async () => {
-    POOL.execute.mockReturnValue([[{ id: 1, email: "imtaebari@gmail.com" }]]);
-    issueAtoken.mockReturnValue("assdqwasdjnj.qdwsqs.qwead");
-    const res = await request(app).get("/users/imtaebari@gmail.com");
-    expect(res.body).toStrictEqual({
-      code: 200,
-      id: 1,
-      accessToken: "assdqwasdjnj.qdwsqs.qwead",
-      refreshToken: "assdqwasdjnj.qdwsqs.qwead",
-    });
+  test.only("getUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환하고 캐시에 refreshToken을 저장한다.", async () => {
+    // given
+    const userId = await userDB.save(new User({ email: "TestEmail" }));
+
+    // when
+    const res = await request(app).get("/users/TestEmail");
+
+    // then
+    expect(res.body.id).toBe(userId);
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.refreshToken).toBeDefined();
+    expect(await cache.get(`${"RefreshToken"}:${userId}`)).toEqual(
+      expect.anything()
+    );
   });
 
-  test("getUsers는 실패하면 500코드를 반환해야 한다.", async () => {
-    POOL.execute.mockImplementation(() => {
-      throw new Error("에러발생");
-    });
-    const res = await request(app).get("/users/1");
-    expect(res.statusCode).toBe(500);
+  test("getUsers는 없는 유저를 조회하면 500코드를 반환한다.", async () => {
+    // when
+    const res = await request(app).get("/users/TestEmail");
+
+    // then
+    expect(res.status).toBe(500);
   });
 });
 
 describe("postUsers", () => {
-  test("postUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환해야 한다.", async () => {
-    POOL.query.mockReturnValue();
-    POOL.execute.mockReturnValue([{ insertId: 10 }]);
-    issueAtoken.mockReturnValue("assdqwasdjnj.qdwsqs.qwead");
-    const res = await request(app).post("/users").send({ email: "hahaha" });
+  test("postUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환하고 캐시에 refreshToken을 저장한다.", async () => {
+    // when
+    const res = await request(app).post("/users").send({ email: "TestEmail" });
 
-    expect(res.body).toStrictEqual({
-      code: 200,
-      id: 10,
-      accessToken: "assdqwasdjnj.qdwsqs.qwead",
-      refreshToken: "assdqwasdjnj.qdwsqs.qwead",
-    });
-  });
-
-  test("postUsers는 실패하면 500코드를 반환해야 한다.", async () => {
-    POOL.query.mockReturnValue();
-    POOL.execute.mockImplementation(() => {
-      throw new Error("쿼리 실패");
-    });
-
-    const res = await request(app).post("/users").send({ email: "hahaha" });
-    expect(res.statusCode).toBe(500);
-  });
-
-  test("등록된 이메일로 postUsers를 호출하면 302코드와 리다이렉트 될 Location을 받는다.", async () => {
-    POOL.execute.mockImplementation(() =>
-      Promise.reject({ code: "ER_DUP_ENTRY" })
+    // then
+    expect(res.body.id).toBeDefined();
+    expect(res.body.accessToken).toBeDefined();
+    expect(res.body.refreshToken).toBeDefined();
+    expect(await cache.get(`${"RefreshToken"}:${res.body.id}`)).toEqual(
+      expect.anything()
     );
+  });
 
-    const res = await request(app).post("/users").send({ email: "hahaha" });
-    expect(res.header.location).toBe(`${process.env.SERVER}/users/hahaha`);
-    expect(res.statusCode).toBe(302);
+  test("중복회원 가입은 409코드를 반환한다.", async () => {
+    // given
+    await userDB.save(new User({ email: "TestEmail" }));
+
+    // when
+    const res = await request(app).post("/users").send({ email: "TestEmail" });
+
+    // then
+    expect(res.status).toBe(409);
   });
 });
