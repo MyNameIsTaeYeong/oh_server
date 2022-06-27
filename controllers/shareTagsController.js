@@ -27,7 +27,8 @@ const postShareTags = async (req, res) => {
         ? res.json({ code: 200, insertId, accessToken: req.newAccessToken })
         : res.json({ code: 200, insertId });
       return res.end();
-    });
+    })
+    .catch((e) => next(e));
 };
 
 module.exports = { postShareTags, getShareTags };

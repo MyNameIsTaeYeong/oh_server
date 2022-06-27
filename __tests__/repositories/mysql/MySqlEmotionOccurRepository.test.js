@@ -23,7 +23,7 @@ describe("MySqlEmotionOccurRepository의 save()", () => {
     const mySqlEmotionOccurRepository = new MySqlEmotionOccurRepository(
       Container
     );
-    expect(await mySqlEmotionOccurRepository.save(new EmoOccur())).toBe(1);
+    expect(await mySqlEmotionOccurRepository.save(new EmoOccur({}))).toBe(1);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 발생시킨다.", async () => {
@@ -37,7 +37,7 @@ describe("MySqlEmotionOccurRepository의 save()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.save(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.save(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -52,7 +52,7 @@ describe("MySqlEmotionOccurRepository의 save()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.save(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.save(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -67,7 +67,7 @@ describe("MySqlEmotionOccurRepository의 save()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.save(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.save(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -82,7 +82,7 @@ describe("MySqlEmotionOccurRepository의 save()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.save(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.save(new EmoOccur({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -99,7 +99,7 @@ describe("MySqlEmotionOccurRepository의 remove()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -114,7 +114,7 @@ describe("MySqlEmotionOccurRepository의 remove()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -129,7 +129,7 @@ describe("MySqlEmotionOccurRepository의 remove()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -144,7 +144,7 @@ describe("MySqlEmotionOccurRepository의 remove()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur())
+      async () => await mySqlEmotionOccurRepository.remove(new EmoOccur({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -161,7 +161,9 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
       Container
     );
 
-    const expected = await mySqlEmotionOccurRepository.findByUserId(new User());
+    const expected = await mySqlEmotionOccurRepository.findByUserId(
+      new User({})
+    );
     expect(expected.length).toBe(2);
   });
 
@@ -177,7 +179,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
     );
 
     expect(
-      async () => await mySqlEmotionOccurRepository.findByUserId(new User())
+      async () => await mySqlEmotionOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -193,7 +195,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
     );
 
     expect(
-      async () => await mySqlEmotionOccurRepository.findByUserId(new User())
+      async () => await mySqlEmotionOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -209,7 +211,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
     );
 
     expect(
-      async () => await mySqlEmotionOccurRepository.findByUserId(new User())
+      async () => await mySqlEmotionOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -224,7 +226,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
       Container
     );
     expect(
-      async () => await mySqlEmotionOccurRepository.findByUserId(new User())
+      async () => await mySqlEmotionOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -242,7 +244,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     );
 
     const expected = await mySqlEmotionOccurRepository.findByRecordId(
-      new Emotion()
+      new Emotion({})
     );
 
     expect(expected.length).toBe(2);
@@ -260,7 +262,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     );
     expect(
       async () =>
-        await mySqlEmotionOccurRepository.findByRecordId(new Emotion())
+        await mySqlEmotionOccurRepository.findByRecordId(new Emotion({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -276,7 +278,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     );
     expect(
       async () =>
-        await mySqlEmotionOccurRepository.findByRecordId(new Emotion())
+        await mySqlEmotionOccurRepository.findByRecordId(new Emotion({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -292,7 +294,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     );
     expect(
       async () =>
-        await mySqlEmotionOccurRepository.findByRecordId(new Emotion())
+        await mySqlEmotionOccurRepository.findByRecordId(new Emotion({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -308,7 +310,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     );
     expect(
       async () =>
-        await mySqlEmotionOccurRepository.findByRecordId(new Emotion())
+        await mySqlEmotionOccurRepository.findByRecordId(new Emotion({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

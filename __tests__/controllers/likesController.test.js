@@ -6,7 +6,6 @@ const ShareTag = require("../../domains/ShareTag");
 const { issueAtoken } = require("../../utilities");
 const User = require("../../domains/User");
 const MySqlLikeRepository = require("../../repositories/mysql/MySqlLikeRepository");
-const ShareTagService = require("../../services/ShareTagService");
 
 require("../../container");
 const Container = require("typedi").Container;
@@ -18,7 +17,7 @@ const likeDB = new MySqlLikeRepository(Container);
 let userId;
 
 beforeAll(
-  async () => (userId = await userDB.save(new User({ email: "test" })))
+  async () => (userId = await userDB.saveForTest(new User({ email: "test" })))
 );
 
 afterAll(async () => {

@@ -20,7 +20,7 @@ describe("MySqlActivityOccurRepository의 save()", () => {
     });
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
-    expect(await mySqlActOccurRepository.save(new ActOccur())).toBe(1);
+    expect(await mySqlActOccurRepository.save(new ActOccur({}))).toBe(1);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 발생시킨다.", async () => {
@@ -32,7 +32,7 @@ describe("MySqlActivityOccurRepository의 save()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.save(new ActOccur())
+      async () => await mySqlActOccurRepository.save(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -45,7 +45,7 @@ describe("MySqlActivityOccurRepository의 save()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.save(new ActOccur())
+      async () => await mySqlActOccurRepository.save(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -58,7 +58,7 @@ describe("MySqlActivityOccurRepository의 save()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.save(new ActOccur())
+      async () => await mySqlActOccurRepository.save(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -71,7 +71,7 @@ describe("MySqlActivityOccurRepository의 save()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.save(new ActOccur())
+      async () => await mySqlActOccurRepository.save(new ActOccur({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -86,7 +86,7 @@ describe("MySqlActivityOccurRepository의 remove()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.remove(new ActOccur())
+      async () => await mySqlActOccurRepository.remove(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -99,7 +99,7 @@ describe("MySqlActivityOccurRepository의 remove()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.remove(new ActOccur())
+      async () => await mySqlActOccurRepository.remove(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -112,7 +112,7 @@ describe("MySqlActivityOccurRepository의 remove()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.remove(new ActOccur())
+      async () => await mySqlActOccurRepository.remove(new ActOccur({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -125,7 +125,7 @@ describe("MySqlActivityOccurRepository의 remove()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.remove(new ActOccur())
+      async () => await mySqlActOccurRepository.remove(new ActOccur({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -140,7 +140,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
 
-    const expected = await mySqlActOccurRepository.findByUserId(new User());
+    const expected = await mySqlActOccurRepository.findByUserId(new User({}));
     expect(expected.length).toBe(2);
   });
 
@@ -153,7 +153,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByUserId(new User())
+      async () => await mySqlActOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -166,7 +166,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByUserId(new User())
+      async () => await mySqlActOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -179,7 +179,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByUserId(new User())
+      async () => await mySqlActOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -192,7 +192,7 @@ describe("MySqlActivityOccurRepository의 findByUserId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByUserId(new User())
+      async () => await mySqlActOccurRepository.findByUserId(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -208,7 +208,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
 
     const expected = await mySqlActOccurRepository.findByRecordId(
-      new Activity()
+      new Activity({})
     );
 
     expect(expected.length).toBe(2);
@@ -223,7 +223,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -236,7 +236,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -249,7 +249,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -262,7 +262,7 @@ describe("MySqlActivityOccurRepository의 findByRecordId()", () => {
 
     const mySqlActOccurRepository = new MySqlActivityOccurRepository(Container);
     expect(
-      async () => await mySqlActOccurRepository.findByRecordId(new Activity())
+      async () => await mySqlActOccurRepository.findByRecordId(new Activity({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

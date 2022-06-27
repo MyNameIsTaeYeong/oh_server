@@ -18,7 +18,7 @@ describe("MySqlShareTagRepository의 save", () => {
     });
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
 
-    const shareTag = new ShareTag();
+    const shareTag = new ShareTag({});
     shareTag.content = "하하하";
     shareTag.userId = 1;
 
@@ -88,7 +88,7 @@ describe("MySqlShareTagRepository의 remove", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(async () =>
-      mySqlShareTagRepo.remove(new ShareTag())
+      mySqlShareTagRepo.remove(new ShareTag({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -101,7 +101,7 @@ describe("MySqlShareTagRepository의 remove", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(async () =>
-      mySqlShareTagRepo.remove(new ShareTag())
+      mySqlShareTagRepo.remove(new ShareTag({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -114,7 +114,7 @@ describe("MySqlShareTagRepository의 remove", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(async () =>
-      mySqlShareTagRepo.remove(new ShareTag())
+      mySqlShareTagRepo.remove(new ShareTag({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -127,7 +127,7 @@ describe("MySqlShareTagRepository의 remove", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(async () =>
-      mySqlShareTagRepo.remove(new ShareTag())
+      mySqlShareTagRepo.remove(new ShareTag({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -147,7 +147,7 @@ describe("MySqlShareTagRepository의 findAll", () => {
     });
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
-    const user = new User();
+    const user = new User({});
     const page = 1;
     expect(await mySqlShareTagRepo.findAll({ user, page })).toStrictEqual([
       { id: 1, content: "기쁨", userId: 1, likeCnt: 2 },
@@ -224,7 +224,7 @@ describe("MySqlShareTagRepository의 findByUserId", () => {
     });
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
-    expect(await mySqlShareTagRepo.findByUserId(new User())).toStrictEqual([
+    expect(await mySqlShareTagRepo.findByUserId(new User({}))).toStrictEqual([
       { id: 1, content: "기쁨", userId: 1, likeCnt: 2 },
       { id: 2, content: "슬픔", userId: 1, likeCnt: 0 },
       { id: 3, content: "분노", userId: 1, likeCnt: 1 },
@@ -240,7 +240,7 @@ describe("MySqlShareTagRepository의 findByUserId", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(
-      async () => await mySqlShareTagRepo.findByUserId(new User())
+      async () => await mySqlShareTagRepo.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -253,7 +253,7 @@ describe("MySqlShareTagRepository의 findByUserId", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(
-      async () => await mySqlShareTagRepo.findByUserId(new User())
+      async () => await mySqlShareTagRepo.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -266,7 +266,7 @@ describe("MySqlShareTagRepository의 findByUserId", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(
-      async () => await mySqlShareTagRepo.findByUserId(new User())
+      async () => await mySqlShareTagRepo.findByUserId(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -279,7 +279,7 @@ describe("MySqlShareTagRepository의 findByUserId", () => {
 
     const mySqlShareTagRepo = new MySqlShareTagRepository(Container);
     expect(
-      async () => await mySqlShareTagRepo.findByUserId(new User())
+      async () => await mySqlShareTagRepo.findByUserId(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

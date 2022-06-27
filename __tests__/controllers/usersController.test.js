@@ -2,8 +2,6 @@ const request = require("supertest");
 const app = require("../../app");
 const dotenv = require("dotenv");
 const MySqlUserRepository = require("../../repositories/mysql/MySqlUserRepository");
-const MySqlEmotionRepository = require("../../repositories/mysql/MySqlEmotionRepository");
-const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
 const User = require("../../domains/User");
 dotenv.config();
 
@@ -11,19 +9,20 @@ require("../../container");
 const Container = require("typedi").Container;
 
 const userDB = new MySqlUserRepository(Container);
-const emotionDB = new MySqlEmotionRepository(Container);
-const activityDB = new MySqlActivityRepository(Container);
 const cache = Container.get("cache");
 
-afterAll(async () => {
+afterEach(async () => {
   await userDB.clear();
   await Container.get("cache").flushAll();
+});
+
+afterAll(() => {
   Container.get("POOL").end();
   Container.get("cache").QUIT();
 });
 
 describe("getUsers", () => {
-  test.only("getUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환하고 캐시에 refreshToken을 저장한다.", async () => {
+  test("getUsers는 성공하면 유저아이디와 accessToken, refreshToken을 반환하고 캐시에 refreshToken을 저장한다.", async () => {
     // given
     const userId = await userDB.save(new User({ email: "TestEmail" }));
 

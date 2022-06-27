@@ -7,6 +7,7 @@ const getActivities = async (req, res, next) => {
   Container.get("ActivityService")
     .selectRecords(new User({ id: req.params.id }))
     .then((results) => {
+      console.log(results);
       req.newAccessToken
         ? res.json({ code: 200, results, accessToken: req.newAccessToken })
         : res.json({ code: 200, results });
