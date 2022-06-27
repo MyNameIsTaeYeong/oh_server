@@ -20,7 +20,7 @@ describe("MySqlEmotionRepository의 save()", () => {
     });
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
-    expect(await mySqlEmotionRepository.save(new Emotion())).toBe(1);
+    expect(await mySqlEmotionRepository.save(new Emotion({}))).toBe(1);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 던진다.", async () => {
@@ -32,7 +32,7 @@ describe("MySqlEmotionRepository의 save()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.save(new Emotion())
+      mySqlEmotionRepository.save(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -45,7 +45,7 @@ describe("MySqlEmotionRepository의 save()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.save(new Emotion())
+      mySqlEmotionRepository.save(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -58,7 +58,7 @@ describe("MySqlEmotionRepository의 save()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.save(new Emotion())
+      mySqlEmotionRepository.save(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -71,7 +71,7 @@ describe("MySqlEmotionRepository의 save()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.save(new Emotion())
+      mySqlEmotionRepository.save(new Emotion({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -86,7 +86,7 @@ describe("MySqlEmotionRepository의 remove()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.remove(new Emotion())
+      mySqlEmotionRepository.remove(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -99,7 +99,7 @@ describe("MySqlEmotionRepository의 remove()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.remove(new Emotion())
+      mySqlEmotionRepository.remove(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -112,7 +112,7 @@ describe("MySqlEmotionRepository의 remove()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.remove(new Emotion())
+      mySqlEmotionRepository.remove(new Emotion({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -125,7 +125,7 @@ describe("MySqlEmotionRepository의 remove()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(async () =>
-      mySqlEmotionRepository.remove(new Emotion())
+      mySqlEmotionRepository.remove(new Emotion({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -139,7 +139,7 @@ describe("MySqlEmotionRepository의 findAll()", () => {
     });
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
-    expect((await mySqlEmotionRepository.findAll(new User())).length).toBe(2);
+    expect((await mySqlEmotionRepository.findAll(new User({}))).length).toBe(2);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 ReadError를 던진다.", async () => {
@@ -151,7 +151,7 @@ describe("MySqlEmotionRepository의 findAll()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(
-      async () => await mySqlEmotionRepository.findAll(new User())
+      async () => await mySqlEmotionRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -164,7 +164,7 @@ describe("MySqlEmotionRepository의 findAll()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(
-      async () => await mySqlEmotionRepository.findAll(new User())
+      async () => await mySqlEmotionRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -177,7 +177,7 @@ describe("MySqlEmotionRepository의 findAll()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(
-      async () => await mySqlEmotionRepository.findAll(new User())
+      async () => await mySqlEmotionRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -190,7 +190,7 @@ describe("MySqlEmotionRepository의 findAll()", () => {
 
     const mySqlEmotionRepository = new MySqlEmotionRepository(Container);
     expect(
-      async () => await mySqlEmotionRepository.findAll(new User())
+      async () => await mySqlEmotionRepository.findAll(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

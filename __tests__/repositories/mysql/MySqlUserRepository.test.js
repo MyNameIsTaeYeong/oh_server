@@ -20,7 +20,7 @@ describe("MySqlUserRepository의 save()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
 
-    expect(await mySqlUserRepository.save(new User())).toBe(1);
+    expect(await mySqlUserRepository.save(new User({}))).toBe(1);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 던진다.", async () => {
@@ -32,7 +32,7 @@ describe("MySqlUserRepository의 save()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.save(new User())
+      mySqlUserRepository.save(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -45,7 +45,7 @@ describe("MySqlUserRepository의 save()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.save(new User())
+      mySqlUserRepository.save(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -58,7 +58,7 @@ describe("MySqlUserRepository의 save()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.save(new User())
+      mySqlUserRepository.save(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -71,7 +71,7 @@ describe("MySqlUserRepository의 save()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.save(new User())
+      mySqlUserRepository.save(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -86,7 +86,7 @@ describe("MySqlUserRepository의 remove()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.remove(new User())
+      mySqlUserRepository.remove(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -99,7 +99,7 @@ describe("MySqlUserRepository의 remove()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.remove(new User())
+      mySqlUserRepository.remove(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -112,7 +112,7 @@ describe("MySqlUserRepository의 remove()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.remove(new User())
+      mySqlUserRepository.remove(new User({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -125,7 +125,7 @@ describe("MySqlUserRepository의 remove()", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(async () =>
-      mySqlUserRepository.remove(new User())
+      mySqlUserRepository.remove(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -205,7 +205,7 @@ describe("MySqlUserRepository의 findByEmail", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(
-      (await mySqlUserRepository.findByEmail(new User())).email
+      (await mySqlUserRepository.findByEmail(new User({}))).email
     ).toStrictEqual("jaja");
   });
 
@@ -218,7 +218,7 @@ describe("MySqlUserRepository의 findByEmail", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(
-      async () => await mySqlUserRepository.findByEmail(new User())
+      async () => await mySqlUserRepository.findByEmail(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -231,7 +231,7 @@ describe("MySqlUserRepository의 findByEmail", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(
-      async () => await mySqlUserRepository.findByEmail(new User())
+      async () => await mySqlUserRepository.findByEmail(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -244,7 +244,7 @@ describe("MySqlUserRepository의 findByEmail", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(
-      async () => await mySqlUserRepository.findByEmail(new User())
+      async () => await mySqlUserRepository.findByEmail(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -257,7 +257,7 @@ describe("MySqlUserRepository의 findByEmail", () => {
 
     const mySqlUserRepository = new MySqlUserRepository(Container);
     expect(
-      async () => await mySqlUserRepository.findByEmail(new User())
+      async () => await mySqlUserRepository.findByEmail(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

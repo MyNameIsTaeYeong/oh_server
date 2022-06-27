@@ -13,7 +13,7 @@ describe("RecordService의 createRecord", () => {
     Container.set("RecordRepository", {});
     const recordService = new RecordService(Container);
 
-    const record = new Activity();
+    const record = new Activity({});
     record.id = 1;
     //record.name="ha";
     record.userId = 1;
@@ -27,7 +27,7 @@ describe("RecordService의 createRecord", () => {
     Container.set("RecordRepository", {});
     const recordService = new RecordService(Container);
 
-    const record = new Activity();
+    const record = new Activity({});
     record.id = 1;
     record.name = "ha";
     //record.userId = 1;
@@ -43,7 +43,7 @@ describe("RecordService의 deleteRecord", () => {
     Container.set("RecordRepository", {});
     const recordService = new RecordService(Container);
 
-    const record = new Activity();
+    const record = new Activity({});
     //record.id = 1;
     record.name = "ha";
     record.userId = 1;
@@ -59,7 +59,7 @@ describe("RecordService의 selectRecords", () => {
     Container.set("RecordRepository", {});
     const recordService = new RecordService(Container);
 
-    const user = new User();
+    const user = new User({});
     //user.id = 1;
     user.email = "ha";
 

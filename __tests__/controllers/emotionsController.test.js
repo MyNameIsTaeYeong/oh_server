@@ -16,7 +16,7 @@ const emotionDB = new MySqlEmotionRepository(Container);
 let userId;
 
 beforeAll(
-  async () => (userId = await userDB.save(new User({ email: "test" })))
+  async () => (userId = await userDB.saveForTest(new User({ email: "test" })))
 );
 
 afterAll(async () => {

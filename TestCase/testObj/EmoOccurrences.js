@@ -1,4 +1,4 @@
-const { POOL } = require("../db");
+const { POOL } = require("../../db");
 
 const EmoOccurrences = {
   createTestEmoOccurs: async ({ emotionName, userId, recordId, date }) => {

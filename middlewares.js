@@ -64,12 +64,11 @@ const errorCollector = (error, req, res, next) => {
   } else if (error instanceof DuplicatedError) {
     res.status(409);
   } else if (error instanceof RedisError) {
-    console.log(`RedisError ${error.name}`);
     res.status(500);
   } else {
     res.status(500);
   }
-
+  console.log(error.name);
   console.log(`Error Message : ${error.message}`);
   console.log(`Error cause : ${error.cause}`);
 

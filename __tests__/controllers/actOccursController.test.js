@@ -1,7 +1,7 @@
 const app = require("../../app");
 const request = require("supertest");
 const { issueAtoken } = require("../../utilities");
-const TestCase = require("../../objForTest/TestCase");
+const TestCase = require("../../TestCase/TestCase");
 const MySqlUserRepository = require("../../repositories/mysql/MySqlUserRepository");
 const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
 const User = require("../../domains/User");
@@ -23,7 +23,7 @@ const emoOccurDB = new MySqlEmotionOccurRepository(Container);
 let userId, recordId;
 
 beforeAll(async () => {
-  userId = await userDB.save(new User({ email: "test" }));
+  userId = await userDB.saveForTest(new User({ email: "test" }));
   recordId = await activityDB.save(new Activity({ name: "운동", userId }));
 });
 

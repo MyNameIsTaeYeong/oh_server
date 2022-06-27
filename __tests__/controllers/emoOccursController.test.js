@@ -7,7 +7,7 @@ const MySqlEmotionOccurRepository = require("../../repositories/mysql/MySqlEmoti
 const User = require("../../domains/User");
 const Emotion = require("../../domains/Emotion");
 const EmoOccur = require("../../domains/EmoOccur");
-const TestCase = require("../../objForTest/TestCase");
+const TestCase = require("../../TestCase/TestCase");
 const MySqlActivityRepository = require("../../repositories/mysql/MySqlActivityRepository");
 
 require("../../container");
@@ -21,7 +21,7 @@ const activityDB = new MySqlActivityRepository(Container);
 let userId, recordId;
 
 beforeAll(async () => {
-  userId = await userDB.save(new User({ email: "test" }));
+  userId = await userDB.saveForTest(new User({ email: "test" }));
   recordId = await emotionDB.save(new Emotion({ name: "기쁨", userId }));
 });
 

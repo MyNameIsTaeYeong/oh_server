@@ -1,7 +1,7 @@
-const Activities = require("./Activities");
-const ActOccurrences = require("./ActOccurrences");
-const Emotions = require("./Emotions");
-const EmoOccurrences = require("./EmoOccurrences");
+const Activities = require("./testObj/Activities");
+const ActOccurrences = require("./testObj/ActOccurrences");
+const Emotions = require("./testObj/Emotions");
+const EmoOccurrences = require("./testObj/EmoOccurrences");
 
 const TestCase = {
   case1: async ({ userId, recordId }) => {

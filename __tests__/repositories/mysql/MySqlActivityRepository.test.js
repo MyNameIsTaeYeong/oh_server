@@ -20,7 +20,7 @@ describe("MySqlActivityRepository의 save()", () => {
     });
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
-    expect(await mySqlActivityRepository.save(new Activity())).toBe(1);
+    expect(await mySqlActivityRepository.save(new Activity({}))).toBe(1);
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 WriteError를 던진다.", async () => {
@@ -32,7 +32,7 @@ describe("MySqlActivityRepository의 save()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.save(new Activity())
+      mySqlActivityRepository.save(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -45,7 +45,7 @@ describe("MySqlActivityRepository의 save()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.save(new Activity())
+      mySqlActivityRepository.save(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -58,7 +58,7 @@ describe("MySqlActivityRepository의 save()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.save(new Activity())
+      mySqlActivityRepository.save(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -71,7 +71,7 @@ describe("MySqlActivityRepository의 save()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.save(new Activity())
+      mySqlActivityRepository.save(new Activity({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -86,7 +86,7 @@ describe("MySqlActivityRepository의 remove()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.remove(new Activity())
+      mySqlActivityRepository.remove(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -99,7 +99,7 @@ describe("MySqlActivityRepository의 remove()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.remove(new Activity())
+      mySqlActivityRepository.remove(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -112,7 +112,7 @@ describe("MySqlActivityRepository의 remove()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.remove(new Activity())
+      mySqlActivityRepository.remove(new Activity({}))
     ).rejects.toThrowError(WriteError);
   });
 
@@ -125,7 +125,7 @@ describe("MySqlActivityRepository의 remove()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(async () =>
-      mySqlActivityRepository.remove(new Activity())
+      mySqlActivityRepository.remove(new Activity({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });
@@ -139,7 +139,9 @@ describe("MySqlActivityRepository의 findAll()", () => {
     });
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
-    expect((await mySqlActivityRepository.findAll(new User())).length).toBe(2);
+    expect((await mySqlActivityRepository.findAll(new User({}))).length).toBe(
+      2
+    );
   });
 
   test("save()는 ER_ACCESS_DENIED_ERROR 에러시 ReadError를 던진다.", async () => {
@@ -151,7 +153,7 @@ describe("MySqlActivityRepository의 findAll()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(
-      async () => await mySqlActivityRepository.findAll(new User())
+      async () => await mySqlActivityRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -164,7 +166,7 @@ describe("MySqlActivityRepository의 findAll()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(
-      async () => await mySqlActivityRepository.findAll(new User())
+      async () => await mySqlActivityRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -177,7 +179,7 @@ describe("MySqlActivityRepository의 findAll()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(
-      async () => await mySqlActivityRepository.findAll(new User())
+      async () => await mySqlActivityRepository.findAll(new User({}))
     ).rejects.toThrowError(ReadError);
   });
 
@@ -190,7 +192,7 @@ describe("MySqlActivityRepository의 findAll()", () => {
 
     const mySqlActivityRepository = new MySqlActivityRepository(Container);
     expect(
-      async () => await mySqlActivityRepository.findAll(new User())
+      async () => await mySqlActivityRepository.findAll(new User({}))
     ).rejects.toThrowError(UnexpectedError);
   });
 });

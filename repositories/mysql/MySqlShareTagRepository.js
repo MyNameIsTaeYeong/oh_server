@@ -59,7 +59,7 @@ class MySqlShareTagRepository extends RecordRepository {
           `SELECT id, content, likeCnt, ShareTags.userId, tagId as myLike
              FROM ShareTags LEFT JOIN Likes
              ON Likes.userId=? AND ShareTags.id = Likes.tagId
-             LIMIT ${page * 20}, 20`,
+             LIMIT ${Number(page) * 20}, 20`,
           [user.id]
         )
       )[0];

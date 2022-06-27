@@ -138,6 +138,14 @@ class MySqlUserRepository extends UserRepository {
   async clear() {
     await this.#POOL.execute(`DELETE FROM Users`);
   }
+
+  async saveForTest(user) {
+    return (
+      await this.#POOL.execute(`INSERT INTO Users(email) VALUES(?)`, [
+        user.email,
+      ])
+    )[0].insertId;
+  }
 }
 
 module.exports = MySqlUserRepository;

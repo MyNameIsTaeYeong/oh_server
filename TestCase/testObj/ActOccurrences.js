@@ -1,4 +1,4 @@
-const { POOL } = require("../db");
+const { POOL } = require("../../db");
 
 const ActOccurrences = {
   createTestActOccurs: async ({ activityName, userId, recordId, date }) => {

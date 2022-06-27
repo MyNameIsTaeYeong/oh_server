@@ -14,7 +14,7 @@ const userDB = new MySqlUserRepository(Container);
 const activityDB = new MySqlActivityRepository(Container);
 
 beforeAll(async () => {
-  userId = await userDB.save(new User({ email: "test" }));
+  userId = await userDB.saveForTest(new User({ email: "test" }));
 });
 
 afterAll(async () => {
@@ -43,10 +43,9 @@ describe("getActivities", () => {
       activityDB
         .save(new Activity({ name: "설거지", userId }))
         .then((id) => expectedResults.push({ id, name: "설거지", userId })),
-      activityDB
-        .save(new Activity({ name: "독서", userId }))
-        .then((id) => expectedResults.push({ id, name: "독서", userId })),
     ]);
+
+    console.log(expectedResults);
 
     // when
     const accessToken = issueAtoken(userId, "access", "10s");
@@ -55,10 +54,8 @@ describe("getActivities", () => {
       .set("authorization", accessToken);
 
     // then
-    expect(res.body).toStrictEqual({
-      code: 200,
-      results: expectedResults,
-    });
+    console.log(res.body.results);
+    expect(res.body.results).toStrictEqual(expectedResults);
   });
 
   test("getActivities는 refreshToken을 인증한 사용자에게 accessToken과 activity배열을 반환해야 한다.", async () => {
