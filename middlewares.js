@@ -35,7 +35,7 @@ const verifyToken = async (req, res, next) => {
 
     // 403 Forbidden
     if (error.name === "TokenExpiredError") {
-      res.json({
+      res.status(403).json({
         code: 403,
         message: "TokenExpiredError",
       });
