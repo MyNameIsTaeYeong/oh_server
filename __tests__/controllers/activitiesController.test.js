@@ -95,7 +95,20 @@ describe("getActivities", () => {
       .set("authorization", accessToken);
 
     // then
-    expect(res.body.code).toBe(403);
+    expect(res.status).toBe(403);
+  });
+
+  test("getActivities는 잘못된 토큰을 받으면 401코드를 반환해야 한다. ", async () => {
+    // given
+    const accessToken = "aaa.aaa.aaa";
+
+    // when
+    const res = await request(app)
+      .get(`/activities/${userId}`)
+      .set("authorization", accessToken);
+
+    // then
+    expect(res.status).toBe(401);
   });
 });
 
