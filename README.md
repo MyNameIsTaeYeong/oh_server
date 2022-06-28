@@ -104,15 +104,18 @@ CREATE TABLE Likes (
 # 📌 프로젝트 과정 : [Link](https://velog.io/@imtaebari/series/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
 
 - DB 테이블 3정규화까지 진행.
-- jwt를 사용하여 인가 구현
-- 좋아요 동시성 처리
+- jwt를 사용하여 인가 구현.
+- 100명이 동시에 좋아요 누른 경우 동시성 처리
 
-  - mysql FOR UPDATE를 이용하여 트랜잭션동안 행의 읽기연산 대기.
-  - jmeter를 통한 기능 검증.
+  - 첫 번째 시도 : mysql FOR UPDATE를 이용하여 트랜잭션 동안 행의 읽기 연산 대기.
+  - 두 번째 시도 : DB 부하 감소, 빠른 응답을 위해 redis를 사용하여 구현.
+  - [코드](https://github.com/MyNameIsTaeYeong/oh_server/blob/main/services/ShareTagService.js#L47)
 
-- 서버의 응답속도 향상, 데이터 베이스의 부하 감소를 위해 redis 캐시 서버 추가.
-  - 캐싱 전략
-    - 변경에 크게 영향받지 않는 데이터 : lazyLoading, 데이터 일관성을 개선하기 위해 캐시 데이터에 TTL 설정.
-    - 일관성이 중요한 데이터 : write through, lazyLoading 캐시 메모리 관리를 위해 캐시 데이터에 TTL 설정.
+- 수정 및 확장이 불편한 명령형 코드에서 Controller, Service, Repository 계층으로 분리.
+- DI 적용.
+
+  - 계층 간 결합도를 낮추기 위함.
+  - 외부에서 원하는 플로우를 주입하여 테스트가 쉽도록 하기 위함.
+
 - nginx 도입
   - https 설정.
